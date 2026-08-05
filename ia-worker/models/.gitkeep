@@ -1,0 +1,2 @@
+Coloque aqui o peso "best.pt" em produção (gerado por training/train.py).
+Este arquivo binário não deve ser versionado no git (ver .gitignore).

@@ -1,0 +1,38 @@
+# Env
+.env
+.env.local
+.env.*.local
+.env.*
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Expo / React Native
+.expo/
+.expo-shared/
+mobile-app/dist/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IA weights e dataset (não versionar binários/imagens)
+ia-worker/models/*.pt
+dataset/
+api/dataset/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

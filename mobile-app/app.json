@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Tebarrot Estoque",
+    "slug": "tebarrot-estoque",
+    "version": "3.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "platforms": ["ios", "android"],
+    "splash": {
+      "backgroundColor": "#0F172A"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "A câmera é usada para fotografar as pilhas durante a conferência de estoque."
+      }
+    },
+    "android": {
+      "package": "com.tebarrot.estoque",
+      "permissions": [
+        "CAMERA"
+      ]
+    },
+    "extra": {
+      "apiUrl": "https://sua-url-do-tunnel.trycloudflare.com"
+    },
+    "plugins": [
+      "expo-sqlite"
+    ]
+  }
+}
