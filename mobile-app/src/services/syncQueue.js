@@ -13,6 +13,22 @@ import api from './api';
 let unsubscribeNetInfo = null;
 let sincronizando = false;
 let listeners = [];
+let armazemPadraoCache = null;
+
+/**
+ * Itens legados da fila (anteriores ao multi-armazém) foram migrados com
+ * armazem_id=''. Quando encontramos um deles, resolvemos o primeiro armazém
+ * ativo da API uma única vez e reutilizamos em cache no processo.
+ */
+async function resolverArmazemPadrao() {
+  if (armazemPadraoCache) return armazemPadraoCache;
+  const armazens = await api.listarArmazens();
+  if (!armazens || armazens.length === 0) {
+    throw new Error('Nenhum armazém ativo disponível para itens legados da fila.');
+  }
+  armazemPadraoCache = armazens[0].id;
+  return armazemPadraoCache;
+}
 
 function notificarListeners(status) {
   listeners.forEach((cb) => cb(status));
@@ -40,11 +56,13 @@ async function flushQueue() {
 
     for (const item of pendentes) {
       try {
+        const armazemId = item.armazem_id || await resolverArmazemPadrao();
         await api.criarConferencia({
           imagemUri: item.imagem_uri,
-          produtoId: item.produto_id,
-          camadasInformadas: item.camadas_informadas,
-          camadasSugeridasIa: item.camadas_sugeridas_ia,
+          skuId: item.produto_id, // coluna histórica; hoje guarda o id do SKU
+          armazemId,
+          quantidadeContada: item.quantidade_contada,
+          quantidadeSugeridaIa: item.quantidade_sugerida_ia,
           ajusteManual: item.ajuste_manual,
           origem: item.origem,
           criadaOffline: true,
@@ -52,11 +70,25 @@ async function flushQueue() {
         });
         await localDb.removerPendente(item.id);
       } catch (err) {
+        const status = err?.response?.status;
+
+        // Sessão expirada/inválida (401): NÃO marca a fila como erro e NÃO
+        // descarta o item. O operador pode ter feito contagens offline
+        // legítimas — interrompemos e preservamos tudo para depois do login.
+        if (status === 401) {
+          break;
+        }
+
         const mensagem = err?.response?.data?.erro || err.message || 'Erro desconhecido';
         await localDb.marcarErro(item.id, mensagem);
-        // Interrompe o lote nesta falha para preservar a ordem de criação;
-        // a próxima chamada de flushQueue (nova conectividade) tenta de novo.
-        break;
+        // Erro de rede (sem resposta da API): interrompe o lote para tentar de
+        // novo na próxima janela de conectividade, preservando a ordem.
+        // Erro definitivo (4xx — dado inválido/expirado): NÃO bloqueia a fila;
+        // o item fica marcado com erro e o lote segue para o próximo.
+        const erroDefinitivo = status >= 400 && status < 500;
+        if (!erroDefinitivo) {
+          break;
+        }
       }
     }
   } finally {

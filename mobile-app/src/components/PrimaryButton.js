@@ -28,7 +28,7 @@ export default function PrimaryButton({ label, onPress, disabled, loading, varia
 
 const styles = StyleSheet.create({
   base: {
-    backgroundColor: '#0F172A',
+    backgroundColor: '#0F766E',
     paddingVertical: 18,
     borderRadius: 14,
     alignItems: 'center',

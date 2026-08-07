@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.use(autenticar);
 
+router.get('/', movimentacoesController.listar);
 router.get('/:id', movimentacoesController.buscarPorId);
 
 module.exports = router;

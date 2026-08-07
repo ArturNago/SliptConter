@@ -16,7 +16,23 @@ const TIPOS_VALIDOS = ['entrada', 'saida', 'ajuste'];
  * que a originou, quando houver uma.
  *
  * @param {object} params
- * @param {string} params.produtoId
+ * @param {string} params.skuId id do SKU (variação) movimentado
+ * @param {string} params.armazemId
+ * @param {'entrada'|'saida'|'ajuste'} params.tipo
+ * @param {number} params.quantidade quantidade assinada (positiva ou negativa)
+ * @param {string} params.idOperador
+ * @param {string} [params.idConferencia]
+ * @param {string} [params.observacao]
+ * @param {import('pg').PoolClient} [client] cliente de transação
+ */
+/**
+ * Registra uma movimentação e enfileira a sincronização assíncrona com o
+ * Google Sheets. Deve ser chamado dentro da mesma transação da conferência
+ * que a originou, quando houver.
+ *
+ * @param {object} params
+ * @param {string} params.skuId id do SKU (variação) movimentado
+ * @param {string} params.armazemId
  * @param {'entrada'|'saida'|'ajuste'} params.tipo
  * @param {number} params.quantidade quantidade assinada (positiva ou negativa)
  * @param {string} params.idOperador
@@ -25,7 +41,14 @@ const TIPOS_VALIDOS = ['entrada', 'saida', 'ajuste'];
  * @param {import('pg').PoolClient} [client] cliente de transação
  */
 async function registrarMovimentacao(params, client) {
-  const { tipo, quantidade } = params;
+  const { tipo, quantidade, armazemId, skuId } = params;
+
+  if (!skuId) {
+    const err = new Error('SKU é obrigatório para registrar a movimentação.');
+    err.status = 400;
+    err.expose = true;
+    throw err;
+  }
 
   if (!TIPOS_VALIDOS.includes(tipo)) {
     const err = new Error(`Tipo de movimentação inválido: ${tipo}`);
@@ -35,6 +58,12 @@ async function registrarMovimentacao(params, client) {
   }
   if (!Number.isInteger(quantidade) || quantidade === 0) {
     const err = new Error('Quantidade da movimentação deve ser um inteiro diferente de zero.');
+    err.status = 400;
+    err.expose = true;
+    throw err;
+  }
+  if (!armazemId) {
+    const err = new Error('Armazém é obrigatório para registrar a movimentação.');
     err.status = 400;
     err.expose = true;
     throw err;
@@ -49,17 +78,32 @@ async function registrarMovimentacao(params, client) {
 }
 
 /**
- * Retorna o saldo atual de um produto (SUM de todas as movimentações).
+ * Retorna o saldo atual de um SKU (SUM de todas as movimentações).
  */
-async function obterSaldo(produtoId) {
-  return MovimentacaoEstoque.saldoPorProduto(produtoId);
+async function obterSaldo(skuId, armazemId) {
+  return MovimentacaoEstoque.saldoPorSku(skuId, armazemId);
+}
+
+async function obterSaldoPorArmazem(skuId) {
+  return MovimentacaoEstoque.saldoAgrupadoPorArmazem(skuId);
 }
 
 /**
- * Histórico de movimentações de um produto (para auditoria).
+ * Saldo total de todos os SKUs ativos em uma única query (anti-N+1).
  */
-async function historico(produtoId, paginacao) {
-  return MovimentacaoEstoque.listByProduto(produtoId, paginacao);
+async function obterSaldosTotais() {
+  return MovimentacaoEstoque.saldosTotaisPorSku();
 }
 
-module.exports = { registrarMovimentacao, obterSaldo, historico };
+/**
+ * Histórico de movimentações de um SKU (para auditoria).
+ */
+async function historico(skuId, paginacao) {
+  return MovimentacaoEstoque.listBySku(skuId, paginacao);
+}
+
+async function listar(filtros) {
+  return MovimentacaoEstoque.list(filtros);
+}
+
+module.exports = { registrarMovimentacao, obterSaldo, obterSaldoPorArmazem, obterSaldosTotais, historico, listar };

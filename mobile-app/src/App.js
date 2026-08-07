@@ -6,28 +6,45 @@ import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator } from 'react-native';
 
 import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
-import CapturaScreen from './screens/CapturaScreen';
-import ConferenciaScreen from './screens/ConferenciaScreen';
-import SyncStatusScreen from './screens/SyncStatusScreen';
+import LancarContagemScreen from './screens/LancarContagemScreen';
+import ProdutoFormScreen from './screens/ProdutoFormScreen';
+import ArmazemFormScreen from './screens/ArmazemFormScreen';
+import MainTabs from './navigation/MainTabs';
 
 import localDb from './services/localDb';
 import syncQueue from './services/syncQueue';
 import api from './services/api';
 
 const Stack = createNativeStackNavigator();
+const navigationRef = React.createRef();
 
 export default function App() {
   const [pronto, setPronto] = useState(false);
   const [rotaInicial, setRotaInicial] = useState('Login');
 
   useEffect(() => {
+    // Sempre que a sessão expirar em runtime (401 fora do login), voltamos
+    // ao Login a partir de qualquer tela.
+    api.registrarOnSessaoExpirada(() => {
+      navigationRef.current?.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    });
+
     (async () => {
       await localDb.initDb();
       syncQueue.iniciar();
 
       const { token } = await api.obterSessao();
-      setRotaInicial(token ? 'Home' : 'Login');
+      // Valida a validade do JWT salvo: se expirou, descarta e vai ao Login.
+      // Antes o app só checava "a string existe?", pulando o Login com token
+      // morto e tomando 401 em todas as telas (o "bloqueio" relatado).
+      const tokenValido = token && !api.tokenExpirado(token);
+      if (token && !tokenValido) {
+        await api.encerrarSessao();
+      }
+      setRotaInicial(tokenValido ? 'Armazens' : 'Login');
       setPronto(true);
     })();
 
@@ -45,13 +62,13 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName={rotaInicial} screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Captura" component={CapturaScreen} />
-          <Stack.Screen name="Conferencia" component={ConferenciaScreen} options={{ headerShown: true, title: 'Revisão' }} />
-          <Stack.Screen name="SyncStatus" component={SyncStatusScreen} options={{ headerShown: true, title: 'Sincronização' }} />
+          <Stack.Screen name="Armazens" component={MainTabs} />
+          <Stack.Screen name="LancarContagem" component={LancarContagemScreen} />
+          <Stack.Screen name="ProdutoForm" component={ProdutoFormScreen} />
+          <Stack.Screen name="ArmazemForm" component={ArmazemFormScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

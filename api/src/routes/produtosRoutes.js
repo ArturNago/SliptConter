@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(autenticar);
 
 router.get('/', produtosController.listar);
+router.get('/saldos', produtosController.saldosTotais);
 router.get('/sku/:sku', produtosController.buscarPorSku);
 router.get('/:id/saldo', produtosController.saldo);
 router.get('/:id/movimentacoes', produtosController.movimentacoes);

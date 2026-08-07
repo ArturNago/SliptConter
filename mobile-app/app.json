@@ -4,31 +4,57 @@
     "slug": "tebarrot-estoque",
     "version": "3.0.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "light",
-    "platforms": ["ios", "android"],
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "splash": {
-      "backgroundColor": "#0F172A"
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0b251e"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.tebarrot.estoque",
       "supportsTablet": false,
       "infoPlist": {
-        "NSCameraUsageDescription": "A câmera é usada para fotografar as pilhas durante a conferência de estoque."
+        "NSCameraUsageDescription": "A câmera é usada para fotografar produtos e ler códigos durante a conferência de estoque.",
+        "NSPhotoLibraryUsageDescription": "A galeria é usada para escolher uma foto do produto no catálogo.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#0b251e"
+      },
       "package": "com.tebarrot.estoque",
       "permissions": [
-        "CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "extra": {
-      "apiUrl": "https://sua-url-do-tunnel.trycloudflare.com"
+      "apiUrl": "https://estoque.puratienda.store",
+      "eas": {
+        "projectId": "c417bc8b-3a52-40f4-9aa2-e8f4b1be76d6"
+      }
     },
     "plugins": [
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-image-picker",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ]
   }
 }
