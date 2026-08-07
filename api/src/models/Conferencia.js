@@ -1,6 +1,6 @@
 /**
  * Model: conferencias
- * Cada contagem realizada: imagem, camadas informadas, origem (manual/IA),
+ * Cada contagem realizada: imagem opcional, quantidade direta, origem (manual/IA),
  * status do dataset (usado pelo worker de treino em V1).
  */
 const db = require('../config/db');
@@ -11,11 +11,12 @@ const db = require('../config/db');
  */
 async function create(data, client = db) {
   const {
-    produtoId,
+    skuId,
+    armazemId,
     idOperador,
     urlImagemLocal,
-    camadasInformadas,
-    camadasSugeridasIa = null,
+    quantidadeContada,
+    quantidadeSugeridaIa = null,
     quantidadeTotal,
     ajusteManual = 0,
     origem = 'manual',
@@ -25,17 +26,18 @@ async function create(data, client = db) {
 
   const { rows } = await client.query(
     `INSERT INTO conferencias
-       (produto_id, id_operador, url_imagem_local, camadas_informadas,
-        camadas_sugeridas_ia, quantidade_total, ajuste_manual, origem,
-        status_dataset, criada_offline)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       (sku_id, armazem_id, id_operador, url_imagem_local, quantidade_contada,
+         quantidade_sugerida_ia, quantidade_total, ajuste_manual, origem,
+         status_dataset, criada_offline)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
      RETURNING *`,
     [
-      produtoId,
+      skuId,
+      armazemId,
       idOperador,
       urlImagemLocal,
-      camadasInformadas,
-      camadasSugeridasIa,
+      quantidadeContada,
+      quantidadeSugeridaIa,
       quantidadeTotal,
       ajusteManual,
       origem,
@@ -51,12 +53,12 @@ async function findById(id) {
   return rows[0] || null;
 }
 
-async function list({ produtoId, limit = 50, offset = 0 } = {}) {
-  if (produtoId) {
+async function list({ skuId, limit = 50, offset = 0 } = {}) {
+  if (skuId) {
     const { rows } = await db.query(
-      `SELECT * FROM conferencias WHERE produto_id = $1
+      `SELECT * FROM conferencias WHERE sku_id = $1
        ORDER BY created_at DESC LIMIT $2 OFFSET $3`,
-      [produtoId, limit, offset]
+      [skuId, limit, offset]
     );
     return rows;
   }

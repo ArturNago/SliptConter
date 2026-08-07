@@ -1,20 +1,70 @@
 /**
- * Cliente HTTP da API — sempre falando com a URL do Cloudflare Tunnel
- * (ou da rede Tailscale, se essa for a alternativa escolhida).
+ * Cliente HTTP da API.
  *
- * A sessão do operador (JWT) é mantida no AsyncStorage — dispositivos são
- * fixos/compartilhados no galpão, então não pedimos login a cada uso
- * (doc, seção 5.1).
+ * A prioridade da URL é:
+ *  1. Variável de ambiente EXPO_PUBLIC_API_URL (definida no .env do projeto).
+ *  2. Se o app estiver rodando via Expo Go conectado ao servidor local
+ *     (sessionId do expo-constants contém o hostname da máquina de dev),
+ *     usa o IP da rede local para que o celular físico alcance a API.
+ *  3. app.json → expo.extra.apiUrl
+ *  4. Fallback: localhost (simulador).
  */
+
 import axios from 'axios';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/**
+ * Callback registrado por App.js para reagir à expiração/invalidade da
+ * sessão em runtime (recebemos 401 fora da tela de login). Permite que o
+ * app redirecione para a tela de Login a partir de qualquer tela.
+ */
+let onSessaoExpirada = null;
+function registrarOnSessaoExpirada(callback) {
+  onSessaoExpirada = callback;
+}
+
+/**
+ * Decodifica o payload de um JWT (sem validar assinatura — só leitura do
+ * `exp`) para saber se a sessão salva ainda está dentro da validade.
+ * Retorna true se o token estiver expirado ou não puder ser lido.
+ */
+function tokenExpirado(token) {
+  if (!token) return true;
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'));
+    if (!payload.exp) return false; // sem expiração declarada: trata como válido
+    return payload.exp * 1000 <= Date.now();
+  } catch {
+    return true; // token corrompido: força re-login
+  }
+}
+
 const TOKEN_KEY = '@tebarrot/token';
 const USUARIO_KEY = '@tebarrot/usuario';
 
+const DEV_MACHINE_IP = '192.168.1.200';
+const DEV_MACHINE_HOSTNAME = 'DSK-TI';
+
+function detectarIpLocal() {
+  try {
+    const sessionId = Constants.expoConfig?.extra?.expoGo?.releaseId || '';
+    const hostname = Constants.deviceHostname || '';
+    if (
+      hostname.includes(DEV_MACHINE_HOSTNAME) ||
+      sessionId.includes(DEV_MACHINE_HOSTNAME)
+    ) {
+      return `http://${DEV_MACHINE_IP}:3000`;
+    }
+  } catch {
+    // expo-constants não disponível (ex.: teste unitário)
+  }
+  return null;
+}
+
 const API_URL =
   process.env.EXPO_PUBLIC_API_URL ||
+  detectarIpLocal() ||
   Constants.expoConfig?.extra?.apiUrl ||
   'http://localhost:3000';
 
@@ -30,6 +80,31 @@ http.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+http.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error.response?.status;
+
+    // Sessão expirada/inválida: limpa o AsyncStorage e devolve o usuário ao
+    // Login. A exceção é a própria rota de login (401 lá = credencial errada,
+    // e não expiração — não queremos limpar e sim mostrar "usuário/senha inválidos").
+    const ehRotaLogin = error.config?.url?.includes('/auth/login');
+    if (status === 401 && !ehRotaLogin) {
+      await encerrarSessao();
+      if (onSessaoExpirada) onSessaoExpirada();
+    }
+
+    if (status === 403) {
+      error.message = 'Apenas gestores podem alterar o catálogo';
+    } else if (error.response?.data?.erro) {
+      // A API responde sempre com a chave `erro` (com acento) — corrigido
+      // aqui, pois antes lia `error` (sem acento) e descartava toda mensagem.
+      error.message = error.response.data.erro;
+    }
+    return Promise.reject(error);
+  }
+);
 
 async function salvarSessao(token, usuario) {
   await AsyncStorage.setItem(TOKEN_KEY, token);
@@ -64,8 +139,61 @@ async function buscarProdutoPorSku(sku) {
   return data;
 }
 
-async function obterSaldoProduto(produtoId) {
-  const { data } = await http.get(`/produtos/${produtoId}/saldo`);
+async function listarProdutos(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+  const { data } = await http.get('/produtos', { params });
+  return data;
+}
+
+/**
+ * Saldo total de todos os SKUs em uma única chamada (anti-N+1).
+ * Retorna [{ skuId, saldoTotal }].
+ */
+async function listarSaldosTotais() {
+  const { data } = await http.get('/produtos/saldos');
+  return data;
+}
+
+async function criarProduto(produto) {
+  const { data } = await http.post('/produtos', produto);
+  return data;
+}
+
+async function atualizarProduto(id, produto) {
+  const { data } = await http.patch(`/produtos/${id}`, produto);
+  return data;
+}
+
+async function listarArmazens() {
+  const { data } = await http.get('/armazens');
+  return data;
+}
+
+async function criarArmazem(armazem) {
+  const { data } = await http.post('/armazens', armazem);
+  return data;
+}
+
+async function atualizarArmazem(id, armazem) {
+  const { data } = await http.patch(`/armazens/${id}`, armazem);
+  return data;
+}
+
+async function buscarEstoqueArmazem(armazemId) {
+  const { data } = await http.get(`/armazens/${armazemId}/estoque`);
+  return data;
+}
+
+async function obterSaldoProduto(produtoId, armazemId) {
+  const params = armazemId ? { armazemId } : {};
+  const { data } = await http.get(`/produtos/${produtoId}/saldo`, { params });
+  return data;
+}
+
+async function listarMovimentacoesProduto(produtoId, { limit = 20 } = {}) {
+  const { data } = await http.get(`/produtos/${produtoId}/movimentacoes`, { params: { limit } });
   return data;
 }
 
@@ -74,25 +202,41 @@ async function obterSaldoProduto(produtoId) {
 /**
  * @param {object} params
  * @param {string} params.imagemUri uri local do arquivo (expo-camera)
- * @param {string} params.produtoId
- * @param {number} params.camadasInformadas
- * @param {number} [params.camadasSugeridasIa]
+ * @param {string} params.skuId id do SKU (aceita o legado `produtoId` — itens
+ *                 antigos da fila offline ainda usam esse nome)
+ * @param {string} params.armazemId
+ * @param {number} params.quantidadeContada
+ * @param {number} [params.quantidadeSugeridaIa]
  * @param {number} [params.ajusteManual]
  * @param {'manual'|'ia'} [params.origem]
  * @param {boolean} [params.criadaOffline]
  * @param {'entrada'|'saida'|'ajuste'} [params.tipoMovimentacao]
  */
 async function criarConferencia(params) {
+  const skuId = params.skuId || params.produtoId;
+  if (!skuId) {
+    const err = new Error('Produto (SKU) é obrigatório para a conferência.');
+    err.code = 'VALIDATION';
+    throw err;
+  }
+  if (!params.armazemId) {
+    const err = new Error('Armazém é obrigatório para a conferência.');
+    err.code = 'VALIDATION';
+    throw err;
+  }
   const form = new FormData();
-  form.append('imagem', {
-    uri: params.imagemUri,
-    name: 'foto.jpg',
-    type: 'image/jpeg',
-  });
-  form.append('produtoId', params.produtoId);
-  form.append('camadasInformadas', String(params.camadasInformadas));
-  if (params.camadasSugeridasIa !== undefined && params.camadasSugeridasIa !== null) {
-    form.append('camadasSugeridasIa', String(params.camadasSugeridasIa));
+  if (params.imagemUri) {
+    form.append('imagem', {
+      uri: params.imagemUri,
+      name: 'foto.jpg',
+      type: 'image/jpeg',
+    });
+  }
+  form.append('skuId', skuId);
+  form.append('armazemId', params.armazemId);
+  form.append('quantidadeContada', String(params.quantidadeContada));
+  if (params.quantidadeSugeridaIa !== undefined && params.quantidadeSugeridaIa !== null) {
+    form.append('quantidadeSugeridaIa', String(params.quantidadeSugeridaIa));
   }
   form.append('ajusteManual', String(params.ajusteManual || 0));
   form.append('origem', params.origem || 'manual');
@@ -119,14 +263,34 @@ async function solicitarSugestaoIA(imagemUri) {
   return data;
 }
 
+async function listarMovimentacoes(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+  const { data } = await http.get('/movimentacoes', { params });
+  return data;
+}
+
 export default {
   API_URL,
   http,
   obterSessao,
   encerrarSessao,
+  tokenExpirado,
+  registrarOnSessaoExpirada,
   login,
+  listarProdutos,
+  listarSaldosTotais,
   buscarProdutoPorSku,
+  criarProduto,
+  atualizarProduto,
+  listarArmazens,
+  criarArmazem,
+  atualizarArmazem,
+  buscarEstoqueArmazem,
   obterSaldoProduto,
+  listarMovimentacoesProduto,
   criarConferencia,
+  listarMovimentacoes,
   solicitarSugestaoIA,
 };

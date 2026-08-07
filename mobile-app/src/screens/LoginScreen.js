@@ -30,7 +30,7 @@ export default function LoginScreen({ navigation }) {
     setCarregando(true);
     try {
       await api.login(username.trim(), senha);
-      navigation.replace('Home');
+       navigation.replace('Armazens');
     } catch (err) {
       if (!err.response) {
         // Sem resposta do servidor: problema de rede/túnel, não de credencial.

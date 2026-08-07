@@ -15,10 +15,11 @@ const { caminhoRelativo } = require('../middlewares/uploadMiddleware');
 /**
  * POST /api/conferencias
  * multipart/form-data:
- *   imagem            (arquivo, obrigatório)
- *   produtoId          (string, obrigatório)
- *   camadasInformadas  (int, obrigatório)
- *   camadasSugeridasIa (int, opcional — preenchido em V1)
+ *   imagem            (arquivo, opcional)
+ *   skuId             (string, obrigatório — aceita o legado "produtoId" como alias)
+ *   armazemId         (string, obrigatório)
+ *   quantidadeContada (int, obrigatório)
+ *   quantidadeSugeridaIa (int, opcional — preenchido em V1)
  *   ajusteManual       (int, opcional, default 0)
  *   origem             ('manual' | 'ia', opcional, default 'manual')
  *   criadaOffline      (boolean, opcional — item veio da fila do SQLite local)
@@ -26,32 +27,37 @@ const { caminhoRelativo } = require('../middlewares/uploadMiddleware');
  */
 async function criar(req, res, next) {
   try {
-    if (!req.file) {
-      return res.status(400).json({ erro: 'Imagem da pilha é obrigatória.' });
-    }
-
     const {
+      skuId: skuIdBody,
       produtoId,
-      camadasInformadas,
-      camadasSugeridasIa,
+      armazemId,
+      quantidadeContada,
+      quantidadeSugeridaIa,
       ajusteManual,
       origem,
       criadaOffline,
       tipoMovimentacao,
     } = req.body;
 
-    if (!produtoId || camadasInformadas === undefined) {
-      return res.status(400).json({ erro: 'produtoId e camadasInformadas são obrigatórios.' });
+    const skuId = skuIdBody || produtoId;
+    if (produtoId && !skuIdBody) {
+      // eslint-disable-next-line no-console
+      console.warn('[conferenciasController] campo "produtoId" está deprecado; o app deve enviar "skuId".');
     }
 
-    const urlImagemLocal = caminhoRelativo(req.file.path);
+    if (!skuId || !armazemId || quantidadeContada === undefined) {
+      return res.status(400).json({ erro: 'skuId, armazemId e quantidadeContada são obrigatórios.' });
+    }
+
+    const urlImagemLocal = req.file ? caminhoRelativo(req.file.path) : null;
 
     const { conferencia, movimentacao } = await conferenciaService.registrarConferencia({
-      produtoId,
+      skuId,
+      armazemId,
       idOperador: req.usuario.id,
       urlImagemLocal,
-      camadasInformadas: parseInt(camadasInformadas, 10),
-      camadasSugeridasIa: camadasSugeridasIa ? parseInt(camadasSugeridasIa, 10) : null,
+      quantidadeContada: parseInt(quantidadeContada, 10),
+      quantidadeSugeridaIa: quantidadeSugeridaIa ? parseInt(quantidadeSugeridaIa, 10) : null,
       ajusteManual: ajusteManual ? parseInt(ajusteManual, 10) : 0,
       origem: origem === 'ia' ? 'ia' : 'manual',
       criadaOffline: criadaOffline === 'true' || criadaOffline === true,
@@ -95,12 +101,13 @@ async function sugestaoIA(req, res, next) {
 
 /**
  * GET /api/conferencias
+ * Filtro opcional: ?skuId=<uuid> (aceita o legado ?produtoId= como alias).
  */
 async function listar(req, res, next) {
   try {
-    const { produtoId, limit, offset } = req.query;
+    const { skuId: skuIdQuery, produtoId, limit, offset } = req.query;
     const conferencias = await conferenciaService.listar({
-      produtoId,
+      skuId: skuIdQuery || produtoId,
       limit: limit ? parseInt(limit, 10) : undefined,
       offset: offset ? parseInt(offset, 10) : undefined,
     });

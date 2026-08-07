@@ -9,11 +9,11 @@ const env = require('../config/env');
 const { getSheetDoc } = require('../config/sheets');
 const SheetsSyncQueue = require('../models/SheetsSyncQueue');
 const MovimentacaoEstoque = require('../models/MovimentacaoEstoque');
-const Produto = require('../models/Produto');
+const Sku = require('../models/Sku');
 const ledgerService = require('./ledgerService');
 
 const SHEET_TITLE = 'Estoque';
-const HEADERS = ['sku', 'descricao', 'saldo_atual', 'ultima_movimentacao'];
+const HEADERS = ['sku', 'descricao', 'armazem', 'saldo_atual', 'ultima_movimentacao'];
 
 let intervalHandle = null;
 
@@ -28,23 +28,26 @@ async function getOrCreateSheet(doc) {
 /**
  * Atualiza (ou cria) a linha do SKU correspondente com o saldo mais recente.
  */
-async function atualizarLinhaDoProduto(produto) {
+async function atualizarLinhaDoSku(sku, armazemId) {
   const doc = await getSheetDoc();
   const sheet = await getOrCreateSheet(doc);
   const rows = await sheet.getRows();
 
-  const saldo = await ledgerService.obterSaldo(produto.id);
-  const linhaExistente = rows.find((r) => r.get('sku') === produto.sku);
+  const armazem = await require('../models/Armazem').findById(armazemId);
+  const saldo = await ledgerService.obterSaldo(sku.id, armazemId);
+  const linhaExistente = rows.find((r) => r.get('sku') === sku.sku && r.get('armazem') === armazem?.nome);
 
   if (linhaExistente) {
-    linhaExistente.set('descricao', produto.descricao);
+    linhaExistente.set('descricao', sku.descricao);
+    linhaExistente.set('armazem', armazem?.nome || armazemId);
     linhaExistente.set('saldo_atual', String(saldo));
     linhaExistente.set('ultima_movimentacao', new Date().toISOString());
     await linhaExistente.save();
   } else {
     await sheet.addRow({
-      sku: produto.sku,
-      descricao: produto.descricao,
+      sku: sku.sku,
+      descricao: sku.descricao,
+      armazem: armazem?.nome || armazemId,
       saldo_atual: String(saldo),
       ultima_movimentacao: new Date().toISOString(),
     });
@@ -70,13 +73,13 @@ async function processarFila() {
         continue;
       }
 
-      const produto = await Produto.findById(movimentacao.produto_id);
-      if (!produto) {
+      const sku = await Sku.findById(movimentacao.sku_id);
+      if (!sku) {
         await SheetsSyncQueue.marcarSincronizado(item.id);
         continue;
       }
 
-      await atualizarLinhaDoProduto(produto);
+       await atualizarLinhaDoSku(sku, movimentacao.armazem_id);
       await SheetsSyncQueue.marcarSincronizado(item.id);
     } catch (err) {
       console.error(`[sheetsSync] falha ao sincronizar item ${item.id}:`, err.message);

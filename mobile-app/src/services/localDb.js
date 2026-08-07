@@ -20,15 +20,50 @@ function getDb() {
 
 async function initDb() {
   const db = await getDb();
+  const colunas = await db.getAllAsync('PRAGMA table_info(fila_conferencias)');
+  const modeloNovo = colunas.some((coluna) => coluna.name === 'armazem_id');
+
+  if (colunas.length > 0 && !modeloNovo) {
+    await db.execAsync(`
+      ALTER TABLE fila_conferencias RENAME TO fila_conferencias_antiga;
+      CREATE TABLE fila_conferencias (
+        id TEXT PRIMARY KEY,
+        produto_id TEXT NOT NULL,
+        produto_sku TEXT,
+        armazem_id TEXT NOT NULL DEFAULT '',
+        imagem_uri TEXT,
+        quantidade_contada INTEGER NOT NULL,
+        quantidade_sugerida_ia INTEGER,
+        ajuste_manual INTEGER NOT NULL DEFAULT 0,
+        origem TEXT NOT NULL DEFAULT 'manual',
+        tipo_movimentacao TEXT NOT NULL DEFAULT 'entrada',
+        status_envio TEXT NOT NULL DEFAULT 'pendente',
+        tentativas INTEGER NOT NULL DEFAULT 0,
+        ultimo_erro TEXT,
+        criado_em TEXT NOT NULL
+      );
+      INSERT INTO fila_conferencias
+        (id, produto_id, produto_sku, armazem_id, imagem_uri, quantidade_contada,
+         quantidade_sugerida_ia, ajuste_manual, origem, tipo_movimentacao,
+         status_envio, tentativas, ultimo_erro, criado_em)
+      SELECT id, produto_id, produto_sku, '', imagem_uri, camadas_informadas,
+             camadas_sugeridas_ia, ajuste_manual, origem, tipo_movimentacao,
+             status_envio, tentativas, ultimo_erro, criado_em
+      FROM fila_conferencias_antiga;
+      DROP TABLE fila_conferencias_antiga;
+    `);
+  }
+
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
     CREATE TABLE IF NOT EXISTS fila_conferencias (
       id TEXT PRIMARY KEY,
       produto_id TEXT NOT NULL,
       produto_sku TEXT,
-      imagem_uri TEXT NOT NULL,
-      camadas_informadas INTEGER NOT NULL,
-      camadas_sugeridas_ia INTEGER,
+      armazem_id TEXT NOT NULL,
+      imagem_uri TEXT,
+      quantidade_contada INTEGER NOT NULL,
+      quantidade_sugerida_ia INTEGER,
       ajuste_manual INTEGER NOT NULL DEFAULT 0,
       origem TEXT NOT NULL DEFAULT 'manual',
       tipo_movimentacao TEXT NOT NULL DEFAULT 'entrada',
@@ -50,17 +85,20 @@ async function inserirPendente(item) {
 
   await db.runAsync(
     `INSERT INTO fila_conferencias
-      (id, produto_id, produto_sku, imagem_uri, camadas_informadas,
-       camadas_sugeridas_ia, ajuste_manual, origem, tipo_movimentacao,
+      (id, produto_id, produto_sku, armazem_id, imagem_uri, quantidade_contada,
+       quantidade_sugerida_ia, ajuste_manual, origem, tipo_movimentacao,
        status_envio, tentativas, criado_em)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', 0, ?)`,
     [
       id,
-      item.produtoId,
+      // A coluna mantém o nome histórico `produto_id`, mas armazena o id do SKU
+      // (no app, "produto" = SKU bipado). Aceita o campo legado produtoId.
+      item.skuId || item.produtoId,
       item.produtoSku || null,
+      item.armazemId,
       item.imagemUri,
-      item.camadasInformadas,
-      item.camadasSugeridasIa ?? null,
+      item.quantidadeContada,
+      item.quantidadeSugeridaIa ?? null,
       item.ajusteManual || 0,
       item.origem || 'manual',
       item.tipoMovimentacao || 'entrada',
