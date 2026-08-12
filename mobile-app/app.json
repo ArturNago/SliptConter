@@ -2,7 +2,7 @@
   "expo": {
     "name": "Tebarrot Estoque",
     "slug": "tebarrot-estoque",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -47,6 +47,7 @@
     "plugins": [
       "expo-sqlite",
       "expo-image-picker",
+      "expo-document-picker",
       [
         "expo-build-properties",
         {

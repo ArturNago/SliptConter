@@ -11,7 +11,9 @@ import ProdutosScreen from '../screens/ProdutosScreen';
 import ProdutoDetailScreen from '../screens/ProdutoDetailScreen';
 import MaisScreen from '../screens/MaisScreen';
 import SyncStatusScreen from '../screens/SyncStatusScreen';
-
+import MapeamentosScreen from '../screens/MapeamentosScreen';
+import MapeamentoFormScreen from '../screens/MapeamentoFormScreen';
+import ImportarVendasScreen from '../screens/ImportarVendasScreen';
 const Tab = createBottomTabNavigator();
 const ArmazensStack = createNativeStackNavigator();
 const ProdutosStack = createNativeStackNavigator();
@@ -40,6 +42,9 @@ function MaisNavigator() {
     <MaisStack.Navigator screenOptions={{ headerShown: false }}>
       <MaisStack.Screen name="MaisMenu" component={MaisScreen} />
       <MaisStack.Screen name="SyncStatus" component={SyncStatusScreen} options={{ headerShown: true, title: 'Sincronização' }} />
+      <MaisStack.Screen name="Mapeamentos" component={MapeamentosScreen} options={{ headerShown: true, title: 'Mapeamentos de Anúncios' }} />
+      <MaisStack.Screen name="MapeamentoForm" component={MapeamentoFormScreen} options={{ headerShown: true, title: 'Mapeamento' }} />
+      <MaisStack.Screen name="ImportarVendas" component={ImportarVendasScreen} options={{ headerShown: true, title: 'Importar Vendas' }} />
     </MaisStack.Navigator>
   );
 }

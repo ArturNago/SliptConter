@@ -28,7 +28,7 @@ async function findBySkuEnriched(sku) {
     `SELECT ${CAMPOS_ENRIQUECIDOS}
      FROM skus s
      LEFT JOIN produtos p ON p.id = s.produto_id
-     WHERE s.sku = $1 AND s.ativo = TRUE`,
+     WHERE (s.sku = $1 OR s.codigo_barras_ean = $1) AND s.ativo = TRUE`,
     [sku]
   );
   return rows[0] || null;

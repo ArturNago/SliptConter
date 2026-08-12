@@ -118,6 +118,28 @@ services:
     networks:
       - tebarrot-net
 
+  # ----------------------------------------------------------
+  # Painel Web de Administração (SliptConter Web Admin)
+  # React + Vite servido via Nginx. Expõe na porta 8080 do host
+  # para não conflitar com a API (3000).
+  # ----------------------------------------------------------
+  admin-web:
+    build:
+      context: ./admin-web
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${EXPO_PUBLIC_API_URL:-https://estoque.puratienda.store}
+    container_name: tebarrot-admin-web
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=${EXPO_PUBLIC_API_URL:-https://estoque.puratienda.store}
+    ports:
+      - "${ADMIN_WEB_PORT:-8081}:80"
+    depends_on:
+      - api
+    networks:
+      - tebarrot-net
+
 networks:
   tebarrot-net:
     driver: bridge

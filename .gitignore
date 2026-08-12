@@ -1,6 +1,11 @@
 # Env
 .env
-.env.local
+.env.*
+!.env.example
+
+# Spreadsheets and Data
+*.xlsx
+*.csv
 
 # Node
 node_modules/

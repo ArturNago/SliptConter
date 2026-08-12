@@ -271,6 +271,46 @@ async function listarMovimentacoes(filtros = {}) {
   return data;
 }
 
+// ---- Mapeamentos de Anúncios ----
+
+async function listarMapeamentos(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, v]) => v !== undefined && v !== null && v !== '')
+  );
+  const { data } = await http.get('/mapeamentos', { params });
+  return data;
+}
+
+async function criarMapeamento(payload) {
+  const { data } = await http.post('/mapeamentos', payload);
+  return data;
+}
+
+async function atualizarMapeamento(id, payload) {
+  const { data } = await http.put(`/mapeamentos/${id}`, payload);
+  return data;
+}
+
+async function removerMapeamento(id) {
+  const { data } = await http.delete(`/mapeamentos/${id}`);
+  return data;
+}
+
+async function importarVendas(arquivoUri, nomeArquivo, armazemIds) {
+  const form = new FormData();
+  form.append('arquivo', {
+    uri: arquivoUri,
+    name: nomeArquivo,
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+  form.append('armazemIds', JSON.stringify(armazemIds));
+  const { data } = await http.post('/movimentacoes/importar-vendas', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60000,
+  });
+  return data;
+}
+
 export default {
   API_URL,
   http,
@@ -293,4 +333,9 @@ export default {
   criarConferencia,
   listarMovimentacoes,
   solicitarSugestaoIA,
+  listarMapeamentos,
+  criarMapeamento,
+  atualizarMapeamento,
+  removerMapeamento,
+  importarVendas,
 };
