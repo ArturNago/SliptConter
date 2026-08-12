@@ -1,0 +1,186 @@
+{
+  "usuarios": [
+    {
+      "id": "8e78893b-93ca-4a64-bff2-d8da8b8de304",
+      "nome": "Artur",
+      "username": "Artur",
+      "senha": "9241",
+      "papel": "admin",
+      "ativo": true,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    },
+    {
+      "id": "30c63bf3-d54d-4f12-b339-a13ad3b3cf16",
+      "nome": "João Operador",
+      "username": "joao",
+      "senha": "1234",
+      "papel": "operador",
+      "ativo": true,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    }
+  ],
+  "produtos": [
+    {
+      "id": "db169d7b-1b36-9a84-b4f7-62696b25847a",
+      "nome": "Água Mineral 500ml",
+      "marca": "Crystal",
+      "categoria": "Bebidas",
+      "peso_kg": 0.5,
+      "dimensoes": "30x20x15",
+      "ativo": true,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    },
+    {
+      "id": "dfb90f42-4f38-4e31-8f55-b4618e47d174",
+      "nome": "Arroz Tipo 1",
+      "marca": "Tio João",
+      "categoria": "Alimentos",
+      "peso_kg": 5.0,
+      "dimensoes": "40x30x10",
+      "ativo": true,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    }
+  ],
+  "skus": [
+    {
+      "id": "061d3bf7-2c1b-4172-88f6-5cf4cf1cbcf8",
+      "produto_id": "db169d7b-1b36-9a84-b4f7-62696b25847a",
+      "sku": "AGU-500ML-12",
+      "descricao": "Água Mineral 500ml - Fardo c/ 12 unidades",
+      "volumes_por_camada": 10,
+      "camadas_maximas_palete": 8,
+      "ativo": true,
+      "cor": "Incolor",
+      "material": "Plástico",
+      "codigo_barras_ean": "7891234567890",
+      "custo_medio": 12.50,
+      "preco_venda": 18.90,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    },
+    {
+      "id": "9c4abff2-d8da-8b8d-e304-8e78893b93ca",
+      "produto_id": "dfb90f42-4f38-4e31-8f55-b4618e47d174",
+      "sku": "ARR-5KG-T1",
+      "descricao": "Arroz Tipo 1 - Saco 5kg",
+      "volumes_por_camada": 8,
+      "camadas_maximas_palete": 10,
+      "ativo": true,
+      "cor": "Branco",
+      "material": "Plástico",
+      "codigo_barras_ean": "7891234567891",
+      "custo_medio": 22.00,
+      "preco_venda": 29.90,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    }
+  ],
+  "armazens": [
+    {
+      "id": "4f762696-b258-47ad-b169-d7b1b369a84b",
+      "nome": "Galpão Principal",
+      "codigo": "PRINCIPAL",
+      "ativo": true,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    },
+    {
+      "id": "25b90f42-4f38-4e31-8f55-b4618e47d174",
+      "nome": "Depósito Secundário",
+      "codigo": "SECUNDARIO",
+      "ativo": true,
+      "created_at": "2026-08-12T12:00:00.000Z",
+      "updated_at": "2026-08-12T12:00:00.000Z"
+    }
+  ],
+  "conferencias": [
+    {
+      "id": "c1-uuid-1",
+      "sku_id": "061d3bf7-2c1b-4172-88f6-5cf4cf1cbcf8",
+      "armazem_id": "4f762696-b258-47ad-b169-d7b1b369a84b",
+      "id_operador": "30c63bf3-d54d-4f12-b339-a13ad3b3cf16",
+      "url_imagem_local": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80",
+      "quantidade_contada": 5,
+      "quantidade_sugerida_ia": 5,
+      "quantidade_total": 50,
+      "ajuste_manual": 0,
+      "origem": "ia",
+      "status_dataset": "pendente_treinamento",
+      "criada_offline": false,
+      "created_at": "2026-08-12T10:00:00.000Z"
+    },
+    {
+      "id": "c1-uuid-2",
+      "sku_id": "9c4abff2-d8da-8b8d-e304-8e78893b93ca",
+      "armazem_id": "25b90f42-4f38-4e31-8f55-b4618e47d174",
+      "id_operador": "8e78893b-93ca-4a64-bff2-d8da8b8de304",
+      "url_imagem_local": "https://images.unsplash.com/photo-1595246140625-573b715d11dc?auto=format&fit=crop&w=400&q=80",
+      "quantidade_contada": 4,
+      "quantidade_sugerida_ia": 3,
+      "quantidade_total": 32,
+      "ajuste_manual": 8,
+      "origem": "manual",
+      "status_dataset": "na",
+      "criada_offline": false,
+      "created_at": "2026-08-12T11:15:00.000Z"
+    }
+  ],
+  "movimentacoes_estoque": [
+    {
+      "id": "m1-uuid-1",
+      "sku_id": "061d3bf7-2c1b-4172-88f6-5cf4cf1cbcf8",
+      "armazem_id": "4f762696-b258-47ad-b169-d7b1b369a84b",
+      "tipo": "entrada",
+      "quantidade": 100,
+      "id_operador": "30c63bf3-d54d-4f12-b339-a13ad3b3cf16",
+      "observacao": "Carga inicial",
+      "created_at": "2026-08-11T09:00:00.000Z"
+    },
+    {
+      "id": "m1-uuid-2",
+      "sku_id": "061d3bf7-2c1b-4172-88f6-5cf4cf1cbcf8",
+      "armazem_id": "4f762696-b258-47ad-b169-d7b1b369a84b",
+      "tipo": "ajuste",
+      "quantidade": 50,
+      "id_operador": "30c63bf3-d54d-4f12-b339-a13ad3b3cf16",
+      "id_conferencia": "c1-uuid-1",
+      "observacao": "Conferência realizada",
+      "created_at": "2026-08-12T10:00:00.000Z"
+    },
+    {
+      "id": "m1-uuid-3",
+      "sku_id": "9c4abff2-d8da-8b8d-e304-8e78893b93ca",
+      "armazem_id": "25b90f42-4f38-4e31-8f55-b4618e47d174",
+      "tipo": "entrada",
+      "quantidade": 80,
+      "id_operador": "8e78893b-93ca-4a64-bff2-d8da8b8de304",
+      "observacao": "Entrada de arroz",
+      "created_at": "2026-08-12T11:00:00.000Z"
+    },
+    {
+      "id": "m1-uuid-4",
+      "sku_id": "9c4abff2-d8da-8b8d-e304-8e78893b93ca",
+      "armazem_id": "25b90f42-4f38-4e31-8f55-b4618e47d174",
+      "tipo": "ajuste",
+      "quantidade": 32,
+      "id_operador": "8e78893b-93ca-4a64-bff2-d8da8b8de304",
+      "id_conferencia": "c1-uuid-2",
+      "observacao": "Conferência realizada",
+      "created_at": "2026-08-12T11:15:00.000Z"
+    }
+  ],
+  "sheets_sync_queue": [
+    {
+      "id": "q1-uuid-1",
+      "tipo_movimentacao": "entrada",
+      "sku": "ARR-5KG-T1",
+      "quantidade": 80,
+      "status": "pending",
+      "created_at": "2026-08-12T11:00:00.000Z"
+    }
+  ]
+}
