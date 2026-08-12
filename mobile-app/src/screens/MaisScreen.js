@@ -67,6 +67,28 @@ export default function MaisScreen({ navigation }) {
           </Pressable>
 
           <Pressable 
+            style={({ pressed }) => [styles.menuItem, pressed && styles.pressed]}
+            onPress={() => navigation.navigate('ImportarVendas')}
+          >
+            <View style={styles.menuItemIcon}>
+              <MaterialCommunityIcons name="file-import-outline" size={24} color="#64748b" />
+            </View>
+            <Text style={styles.menuItemLabel}>Importar Vendas</Text>
+            <MaterialCommunityIcons name="chevron-right" size={24} color="#cbd5e1" />
+          </Pressable>
+
+          <Pressable 
+            style={({ pressed }) => [styles.menuItem, pressed && styles.pressed]}
+            onPress={() => navigation.navigate('Mapeamentos')}
+          >
+            <View style={styles.menuItemIcon}>
+              <MaterialCommunityIcons name="link-variant" size={24} color="#64748b" />
+            </View>
+            <Text style={styles.menuItemLabel}>Mapeamentos de Anúncios</Text>
+            <MaterialCommunityIcons name="chevron-right" size={24} color="#cbd5e1" />
+          </Pressable>
+
+          <Pressable 
             style={({ pressed }) => [styles.menuItem, pressed && styles.pressed, styles.menuItemSair]}
             onPress={handleSair}
           >

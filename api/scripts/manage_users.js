@@ -56,7 +56,8 @@ async function main() {
         console.log(`\n✅ Usuário "${nome}" cadastrado com sucesso!`);
       }
     } catch (err) {
-      console.error('\n❌ Erro ao cadastrar usuário:', err.message);
+      const msg = err.message || JSON.stringify(err);
+      console.error('\n❌ Erro ao cadastrar usuário:', msg);
     }
   } else if (opcao === '2') {
     console.log('\n--- Exclusão de Usuário ---');
@@ -74,7 +75,8 @@ async function main() {
         console.log(`\n⚠️ Usuário "${nome}" não encontrado.`);
       }
     } catch (err) {
-      console.error('\n❌ Erro ao excluir usuário:', err.message);
+      const msg = err.message || JSON.stringify(err);
+      console.error('\n❌ Erro ao excluir usuário:', msg);
     }
   } else if (opcao === '0') {
     console.log('\nSaindo...');
