@@ -106,15 +106,15 @@ async function dashboardMetrics(req, res, next) {
 
     // 8. Distribuição por categoria (saldo total por categoria do SKU/Pai).
     const porCategoriaRes = await db.query(
-      `SELECT COALESCE(NULLIF(s.categoria, ''), p.categoria, 'Sem categoria') AS categoria,
-              COALESCE(SUM(m.quantidade), 0)::int AS saldo
-       FROM skus s
-       LEFT JOIN produtos p ON p.id = s.produto_id
-       LEFT JOIN movimentacoes_estoque m ON m.sku_id = s.id
-       WHERE s.ativo = TRUE
-       GROUP BY categoria
-       ORDER BY saldo DESC
-       LIMIT 15`,
+       `SELECT COALESCE(NULLIF(s.categoria, ''), p.categoria, 'Sem categoria') AS categoria,
+               COALESCE(SUM(m.quantidade), 0)::int AS saldo
+        FROM skus s
+        LEFT JOIN produtos p ON p.id = s.produto_id
+        LEFT JOIN movimentacoes_estoque m ON m.sku_id = s.id
+        WHERE s.ativo = TRUE
+        GROUP BY 1
+        ORDER BY saldo DESC
+        LIMIT 15`,
       []
     );
 

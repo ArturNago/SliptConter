@@ -675,3 +675,276 @@ a {
   position: relative;
   height: 280px;
 }
+
+/* ---------- Mobile / Tablet ---------- */
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-w: 280px;
+    --sidebar-w-collapsed: 280px;
+  }
+
+  /* Sidebar vira drawer overlay */
+  .sidebar {
+    width: 280px;
+    max-width: 90vw;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 200;
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+    width: 280px;
+  }
+
+  .sidebar.collapsed .sidebar-brand,
+  .sidebar.collapsed .nav-item span,
+  .sidebar.collapsed .sidebar-footer {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Overlay backdrop para drawer */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+  }
+
+  /* Main content sem margin (sidebar é overlay) */
+  .main-content,
+  .main-content.collapsed {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  /* Header mais compacto */
+  .header {
+    padding: 0 14px;
+    height: 60px;
+  }
+
+  .header h1 {
+    font-size: 16px;
+  }
+
+  .header .spacer {
+    display: none;
+  }
+
+  /* Padding reduzido nas páginas */
+  .page-container {
+    padding: 16px;
+  }
+
+  /* KPI grid: 2 colunas */
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .kpi-card {
+    padding: 16px 18px;
+  }
+
+  .kpi-card .kpi-value {
+    font-size: 22px;
+  }
+
+  .kpi-card .kpi-label {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .kpi-card .kpi-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Grid-2 empilha */
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Card padding reduzido */
+  .card {
+    padding: 16px;
+  }
+
+  /* Tabelas */
+  .table {
+    font-size: 12px;
+  }
+
+  .table thead th,
+  .table tbody td {
+    padding: 8px 10px;
+  }
+
+  .table thead th {
+    font-size: 11px;
+  }
+
+  /* Campos de formulário */
+  .field {
+    margin-bottom: 12px;
+  }
+
+  .input {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+
+  /* Badges menores */
+  .badge {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  /* Botões */
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .btn-sm {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  /* Modal adaptado */
+  .modal {
+    max-width: 95vw;
+    max-height: 85vh;
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 16px 18px;
+  }
+
+  .modal-header h3 {
+    font-size: 16px;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    padding: 14px 18px;
+    gap: 8px;
+  }
+
+  /* Notificações */
+  .notification-stack {
+    top: 12px;
+    right: 12px;
+  }
+
+  .notification {
+    min-width: auto;
+    max-width: 90vw;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  /* Filtros empilhados */
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .filters .field {
+    margin-bottom: 0;
+  }
+
+  .filters .input,
+  .filters .select {
+    min-width: auto;
+  }
+
+  /* Stat pills empilhados */
+  .stat-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stat-pill {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .stat-pill b {
+    font-size: 16px;
+  }
+
+  /* Galeria de fotos */
+  .photo-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Chart height reduzido */
+  .chart-box {
+    height: 220px;
+  }
+
+  /* Tela de login */
+  .login-card {
+    padding: 28px 24px;
+  }
+
+  .login-card h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-card .kpi-value {
+    font-size: 20px;
+  }
+
+  .kpi-card {
+    padding: 14px 16px;
+  }
+
+  .photo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+/* ---------- btn-secondary (faltava) ---------- */
+.btn-secondary {
+  background: var(--vidro);
+  border-color: var(--borda);
+  color: var(--texto);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--borda);
+}

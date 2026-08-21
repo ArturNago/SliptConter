@@ -1,0 +1,602 @@
+[
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Bibox matrix 3 em 1 Branco",
+    "Armazém.2": "Bibox matrix 3 em 1 Branco",
+    "Armazém.3": "PROD-MSHR5UO8",
+    "Armazém.4": 20
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Bobos matrix 3 em 1 nature",
+    "Armazém.2": "Bibox matrix 3 em 1 nature",
+    "Armazém.3": "PROD-MSHQSN0Z",
+    "Armazém.4": 19
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet Atlanta III offwhite/nature",
+    "Armazém.2": "Buffet Atlanta III offwhite/nature",
+    "Armazém.3": "PROD-MSHQR8MI",
+    "Armazém.4": 14,
+    "options": [
+      "BUFFET ATLANTA III OFF WHITE/NATURE",
+      "BUFFET DUNA II OFF WHITE/NATURE",
+      "BUFFET ATLANTA III NATURE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet adega Malorca offwhite/nature",
+    "Armazém.2": "Buffet adega Malorca offwhite/nature",
+    "Armazém.3": "PROD-MSHQP8F4",
+    "Armazém.4": 17,
+    "options": [
+      "BUFFET ADEGA MALLORCA OFF WHITE/NATURE",
+      "BUFFET ARES LUX 4 PORTAS OFF WHITE/NATURE",
+      "BUFFET ARES LUX 3 PORTAS OFF WHITE/NATURE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet ares lux 3 portas Branco",
+    "Armazém.2": "Buffet ares lux 3 portas Branco",
+    "Armazém.3": "PROD-MSITESLZ",
+    "Armazém.4": 3
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet ares lux 3 portas Branco/Nature",
+    "Armazém.2": "Buffet ares lux 3 portas Branco/Nature",
+    "Armazém.3": "PROD-MSITF7AV",
+    "Armazém.4": 1,
+    "options": [
+      "BUFFET ARES LUX 3 PORTAS NATURE",
+      "BUFFET ARES LUX 3 PORTAS BRANCO",
+      "BUFFET ARES LUX 4 PORTAS NATURE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet ares lux 3 portas Nature",
+    "Armazém.2": "Buffet ares lux 3 portas Nature",
+    "Armazém.3": "PROD-MSITEF5B",
+    "Armazém.4": 7
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet ares lux 4 portas",
+    "Armazém.2": "Buffet ares lux 4 portas Branco",
+    "Armazém.3": "PROD-MSITC80J",
+    "Armazém.4": 4
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Buffet ares lux 4 portas Nature",
+    "Armazém.2": "Buffet ares lux 4 portas Nature",
+    "Armazém.3": "PROD-MSITDRZ8",
+    "Armazém.4": 2
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira Málaga 2Un 336",
+    "Armazém.2": "Cadeira Málaga 2Un 336",
+    "Armazém.3": "PROD-MSITNISB",
+    "Armazém.4": 3,
+    "options": [
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 332",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 336/530",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 530"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira Málaga 2Un 337",
+    "Armazém.2": "Cadeira Málaga 2Un 337",
+    "Armazém.3": "PROD-MSITMX3Y",
+    "Armazém.4": 4,
+    "options": [
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 332",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 337/530",
+      "CADEIRA MALAGA (KIT 2 UNID.) - 337 LINHO CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira allegra 337",
+    "Armazém.2": "Cadeira allegra 337",
+    "Armazém.3": "PROD-MSITOSE1",
+    "Armazém.4": 9,
+    "options": [
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 337/530",
+      "CJ ASSENTO/ENCOSTO CADEIRA ALLEGRA 337/530",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 332",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 530"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira malaga 336 2Un ",
+    "Armazém.2": "Cadeira malaga 2Un 226",
+    "Armazém.3": "PROD-MSIZED1T",
+    "Armazém.4": 3,
+    "options": [
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 226/530",
+      "CADEIRA MALAGA (KIT 2 UNID.) - 226 LINHO AREIA",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 521"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira malaga 336 2Un ",
+    "Armazém.2": null,
+    "Armazém.3": null,
+    "Armazém.4": 4,
+    "options": [
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 530",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 521",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 332"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira malaga 336 2Un ",
+    "Armazém.2": null,
+    "Armazém.3": null,
+    "Armazém.4": 6,
+    "options": [
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 530",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 521",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 332"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Cadeira paris 2un 227",
+    "Armazém.2": "Cadeira paris 2un 227",
+    "Armazém.3": "PROD-MSITTO4X",
+    "Armazém.4": 4,
+    "options": [
+      "CADEIRA GASPALAR (KIT 2 UNID.) - 107",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 521",
+      "CADEIRA ALLEGRA (KIT 2 UNID.) - 332"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Havana cabeceira 1,40 Branco",
+    "Armazém.2": "Havana cabeceira 1,40 Branco",
+    "Armazém.3": "PROD-MSHR2ALK",
+    "Armazém.4": 24,
+    "options": [
+      "CABECEIRA CASAL HAVANA 1,40 BRANCO",
+      "MESA CABECEIRA EROS 450 BRANCO",
+      "MESA CABECEIRA EROS 600 BRANCO",
+      "MESA CABECEIRA SANTORINI 450 BRANCO"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Havana cabeceira 1,40 Nature",
+    "Armazém.2": "Havana cabeceira 1,40 Nature",
+    "Armazém.3": "PROD-MSITB9JB",
+    "Armazém.4": 12,
+    "options": [
+      "CABECEIRA CASAL HAVANA 1,40 NATURE",
+      "CABECEIRA CASAL HAVANA 1,40 OFF WHITE/NATURE",
+      "CABECEIRA DETROIT 1,60 NATURE",
+      "MESA CABECEIRA SANTORINI 450 NATURE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Havana cabeceira 1,40 offwhite/nature",
+    "Armazém.2": "Havana cabeceira 1,40 offwhite/nature",
+    "Armazém.3": "PROD-MSHR3MEA",
+    "Armazém.4": 13,
+    "options": [
+      "CABECEIRA DETROIT 1,60 OFF WHITE/NATURE",
+      "CABECEIRA CASAL HAVANA 1,40 OFF WHITE/NATURE",
+      "CABECEIRA DETROIT OFF WHITE/NATURE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Namoradeira mona new 104",
+    "Armazém.2": "Namoradeira mona new 104",
+    "Armazém.3": "PROD-MSITQ6TW",
+    "Armazém.4": 10,
+    "options": [
+      "NAMORADEIRA MONA NEW 104 LINHAO CINZA COM MARROM",
+      "NAMORADEIRA MONA NEW BOUCLE",
+      "NAMORADEIRA MONA NEW 337 LINHO CINZA",
+      "NAMORADEIRA MONA NEW LINHO BEGE CLARO"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Namoradeira mona new 108",
+    "Armazém.2": "Namoradeira mona new 108",
+    "Armazém.3": "PROD-MSITSKF0",
+    "Armazém.4": 1,
+    "options": [
+      "NAMORADEIRA MONA NEW BOUCLE",
+      "NAMORADEIRA MONA NEW 337 LINHO CINZA",
+      "NAMORADEIRA MONA NEW LINHO BEGE CLARO"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Namoradeira mona new 128",
+    "Armazém.2": "Namoradeira mona new 128",
+    "Armazém.3": "PROD-MSITRBNU",
+    "Armazém.4": 5,
+    "options": [
+      "NAMORADEIRA MONA NEW 128 RUSTICO VERDE SAGE",
+      "NAMORADEIRA MONA NEW BOUCLE",
+      "NAMORADEIRA MONA NEW 337 LINHO CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Namoradeira mona new 336",
+    "Armazém.2": "Namoradeira mona new 336",
+    "Armazém.3": "PROD-MSITRXGD",
+    "Armazém.4": 11,
+    "options": [
+      "NAMORADEIRA MONA NEW 336 LINHO TERRACOTA",
+      "NAMORADEIRA MONA NEW BOUCLE",
+      "NAMORADEIRA MONA NEW 337 LINHO CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Namoradeira mona new 337",
+    "Armazém.2": "Namoradeira mona new 337",
+    "Armazém.3": "PROD-MSITQPIT",
+    "Armazém.4": 2,
+    "options": [
+      "NAMORADEIRA MONA NEW 337 LINHO CINZA",
+      "NAMORADEIRA MONA NEW BOUCLE",
+      "NAMORADEIRA MONA NEW 336 LINHO TERRACOTA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Namoradeira Mona new bege ",
+    "Armazém.2": null,
+    "Armazém.3": null,
+    "Armazém.4": 7,
+    "options": [
+      "NAMORADEIRA MONA NEW LINHO BEGE CLARO",
+      "NAMORADEIRA MONA NEW BOUCLE",
+      "NAMORADEIRA MONA NEW 128 RUSTICO VERDE SAGE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 128",
+    "Armazém.2": "Poltrona air 128",
+    "Armazém.3": "PROD-MSIUODGU",
+    "Armazém.4": 4,
+    "options": [
+      "POLTRONA AIR  NEW 128 RUSTICO VERDE SAGE",
+      "POLTRONA AIR 128 RUSTICO VERDE SAGE",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR",
+      "POLTRONA GABI CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 226",
+    "Armazém.2": "Poltrona air 226",
+    "Armazém.3": "PROD-MSIUNPH4",
+    "Armazém.4": 16,
+    "options": [
+      "POLTRONA AIR  NEW 226 LINHO AREIA",
+      "POLTRONA AIR 226 LINHO AREIA",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 305",
+    "Armazém.2": "Poltrona air 305",
+    "Armazém.3": "PROD-MSIUMGQP",
+    "Armazém.4": 13,
+    "options": [
+      "POLTRONA AIR  NEW 305 LINHO CRU",
+      "POLTRONA AIR 305 LINHO CRU",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 336",
+    "Armazém.2": "Poltrona air 336",
+    "Armazém.3": "PROD-MSIUMZ8S",
+    "Armazém.4": 6,
+    "options": [
+      "POLTRONA AIR  NEW 336 LINHO TERRACOTA",
+      "POLTRONA AIR 336 LINHO TERRACOTA",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR",
+      "POLTRONA GABI CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 337",
+    "Armazém.2": "Poltrona air 337",
+    "Armazém.3": "PROD-MSIULNQX",
+    "Armazém.4": 23,
+    "options": [
+      "POLTRONA AIR  NEW 337 LINHO CINZA",
+      "POLTRONA AIR 337 LINHO CINZA",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 521",
+    "Armazém.2": "Poltrona air 521",
+    "Armazém.3": "PROD-MSIUOUPI",
+    "Armazém.4": 7,
+    "options": [
+      "POLTRONA AIR 521 NOBUCK MARROM",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air 227",
+    "Armazém.2": null,
+    "Armazém.3": null,
+    "Armazém.4": 9,
+    "options": [
+      "POLTRONA AIR  NEW 227 LINHO AREIA ESCURA",
+      "POLTRONA AIR 227 LINHO AREIA ESCURA",
+      "POLTRONA HAVAI",
+      "BASE POLTRONA AIR",
+      "POLTRONA GABI CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air new 305",
+    "Armazém.2": "Poltrona air new 305",
+    "Armazém.3": "PROD-MSIUQ7CS",
+    "Armazém.4": 10,
+    "options": [
+      "POLTRONA AIR  NEW 305 LINHO CRU",
+      "POLTRONA AIR  NEW 534 LINHO BEGE",
+      "POLTRONA AIR 305 LINHO CRU"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air new 336",
+    "Armazém.2": "Poltrona air new 336",
+    "Armazém.3": "PROD-MSIUPSBI",
+    "Armazém.4": 3,
+    "options": [
+      "POLTRONA AIR  NEW 336 LINHO TERRACOTA",
+      "POLTRONA AIR  NEW 337 LINHO CINZA",
+      "POLTRONA AIR  NEW 305 LINHO CRU"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona air new 337 ",
+    "Armazém.2": "Poltrona air new 337 1",
+    "Armazém.3": "PROD-MSIUQUQH",
+    "Armazém.4": 1,
+    "options": [
+      "POLTRONA AIR  NEW 337 LINHO CINZA",
+      "POLTRONA AIR  NEW 305 LINHO CRU",
+      "POLTRONA AIR  NEW 534 LINHO BEGE"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 128",
+    "Armazém.2": "Poltrona caraiva 128",
+    "Armazém.3": "PROD-MSIUIXID",
+    "Armazém.4": 8,
+    "options": [
+      "KIT 2 POLTRONAS CARAIVA 128 RUSTICO VERDE SAGE",
+      "POLTRONA CARAIVA 128 RUSTICO VERDE SAGE",
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA HAVAI"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 227",
+    "Armazém.2": "Poltrona caraiva 226",
+    "Armazém.3": "PROD-MSJ0FSOA",
+    "Armazém.4": 117,
+    "options": [
+      "KIT 2 POLTRONAS CARAIVA 226 LINHO AREIA",
+      "POLTRONA CARAIVA 226 LINHO AREIA",
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona uxuá 227",
+    "Armazém.2": "Poltrona caraiva 227",
+    "Armazém.3": "PROD-MSJ0ES4D",
+    "Armazém.4": 1,
+    "options": [
+      "POLTRONA CARAIVA 227 LINHO AREIA ESCURO",
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 226 LINHO AREIA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 235",
+    "Armazém.2": "Poltrona caraiva 235",
+    "Armazém.3": "PROD-MSIUJE2A",
+    "Armazém.4": 7,
+    "options": [
+      "POLTRONA CARAIVA 235 VELUDO PRETO ABSOLUTO",
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 305 LINHO CRU"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 237",
+    "Armazém.2": "Poltrona caraiva 237",
+    "Armazém.3": "PROD-MSIUKB4Y",
+    "Armazém.4": 1,
+    "options": [
+      "POLTRONA CARAIVA 237 VELUDO VERDE MUSGO",
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 337 LINHO CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 246",
+    "Armazém.2": "Poltrona caraiva 246",
+    "Armazém.3": "PROD-MSIUJSYA",
+    "Armazém.4": 2,
+    "options": [
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 244 VELUDO CRU"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 336",
+    "Armazém.2": "Poltrona caraiva 336",
+    "Armazém.3": "PROD-MSJ0T9UW",
+    "Armazém.4": 98,
+    "options": [
+      "KIT 2 POLTRONAS CARAIVA 336 LINHO TERRACOTA",
+      "POLTRONA CARAIVA 336 LINHO TERRACOTA",
+      "POLTRONA CARAIVA 246 CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 337 LINHO CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 337",
+    "Armazém.2": "Poltrona caraiva 337",
+    "Armazém.3": "PROD-MSJ0NINL",
+    "Armazém.4": 68,
+    "options": [
+      "KIT 2 POLTRONAS CARAIVA 337 LINHO CINZA",
+      "POLTRONA CARAIVA 337 LINHO CINZA",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 246 CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona caraiva 518",
+    "Armazém.2": "Poltrona caraiva 518",
+    "Armazém.3": "PROD-MSIUKQEX",
+    "Armazém.4": 6,
+    "options": [
+      "POLTRONA CARAIVA 518 LINHO AZUL MARINHO",
+      "BASE POLTRONA CARAIVA",
+      "POLTRONA CARAIVA 246 CINZA",
+      "POLTRONA CARAIVA 305 LINHO CRU"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona gabi",
+    "Armazém.2": "Poltrona gabi",
+    "Armazém.3": "PROD-MSJ0RCD2",
+    "Armazém.4": 61,
+    "options": [
+      "POLTRONA GABI CINZA",
+      "POLTRONA GABI MARROM",
+      "POLTRONA HAVAI"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona mona 128",
+    "Armazém.2": "Poltrona mona 128",
+    "Armazém.3": "PROD-MSIUTVZ7",
+    "Armazém.4": 4,
+    "options": [
+      "POLTRONA MONA 128 RUSTICO VERGE SAGE",
+      "POLTRONA MONA NEW (KIT 2 UN.) 128 RUSTICO VERDE SAGE",
+      "POLTRONA MONA NEW 128 RUSTICO VERGE SAGE",
+      "BASE POLTRONA MONA",
+      "BASE POLTRONA OMONI T",
+      "POLTRONA MOBIUS AMENDOA 233"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona mona 2Un 337",
+    "Armazém.2": "Poltrona mona 2Un 337",
+    "Armazém.3": "PROD-MSIUTAZF",
+    "Armazém.4": 4,
+    "options": [
+      "POLTRONA MONA (KIT 2 UN.) 337 LINHO CINZA",
+      "POLTRONA MOBIUS AMENDOA 233",
+      "POLTRONA MONA NEW 337 LINHO CINZA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona mona 2Un linho bege",
+    "Armazém.2": "Poltrona mona 2Un linho bege",
+    "Armazém.3": "PROD-MSIUSTTK",
+    "Armazém.4": 9,
+    "options": [
+      "POLTRONA MONA NEW LINHO BEGE CLARO",
+      "POLTRONA MONA (KIT 2 UN.) LINHO BEGE CLARO",
+      "POLTRONA MONA LINHO BEGE CLARO"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona mona bege",
+    "Armazém.2": "Poltrona mona bege",
+    "Armazém.3": "PROD-MSIUV1A5",
+    "Armazém.4": 2,
+    "options": [
+      "POLTRONA MONA (KIT 2 UN.) LINHO BEGE CLARO",
+      "POLTRONA MONA LINHO BEGE CLARO",
+      "POLTRONA MONA NEW (KIT 2 UN.) 332 LINHO BEGE COM BRANCO",
+      "POLTRONA MONA NEW (KIT 2 UN.) LINHO BEGE CLARO",
+      "POLTRONA MONA NEW LINHO BEGE CLARO",
+      "BASE POLTRONA MONA"
+    ]
+  },
+  {
+    "Armazém": "Barracão 334",
+    "Armazém.1": "Poltrona uxuá 305 c/Couro",
+    "Armazém.2": "Poltrona uxuá 305 c/Couro",
+    "Armazém.3": "PROD-MSIUS3E8",
+    "Armazém.4": 2,
+    "options": [
+      "POLTRONA UXUA COURO 305 LINHO CRU",
+      "POLTRONA UXUA 239 RUSTICO ROSE",
+      "POLTRONA TIP 305 LINHO CRU",
+      "POLTRONA AIR 305 LINHO CRU"
+    ]
+  }
+]

@@ -41,3 +41,84 @@ http.interceptors.response.use(
 );
 
 export default http;
+
+// ---- Autenticação ----
+
+async function login(username, senha) {
+  const { data } = await http.post('/auth/login', { username, senha });
+  return data;
+}
+
+// ---- Produtos ----
+
+async function listarProdutos(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+  const { data } = await http.get('/produtos', { params });
+  return data;
+}
+
+async function listarArmazens() {
+  const { data } = await http.get('/armazens');
+  return data;
+}
+
+// ---- Mapeamentos de Anúncios ----
+
+async function listarMapeamentos(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, v]) => v !== undefined && v !== null && v !== '')
+  );
+  const { data } = await http.get('/mapeamentos', { params });
+  return data;
+}
+
+async function criarMapeamento(payload) {
+  const { data } = await http.post('/mapeamentos', payload);
+  return data;
+}
+
+async function atualizarMapeamento(id, payload) {
+  const { data } = await http.put(`/mapeamentos/${id}`, payload);
+  return data;
+}
+
+async function removerMapeamento(id) {
+  const { data } = await http.delete(`/mapeamentos/${id}`);
+  return data;
+}
+
+async function reprocessarNaoMapeados(armazemIds, naoMapeados) {
+  const { data } = await http.post('/movimentacoes/reprocessar-nao-mapeados', { armazemIds, naoMapeados });
+  return data;
+}
+
+// ---- Importação de Vendas ----
+
+async function importarVendas(arquivoUri, nomeArquivo, armazemIds) {
+  const form = new FormData();
+  form.append('arquivo', {
+    uri: arquivoUri,
+    name: nomeArquivo,
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+  form.append('armazemIds', JSON.stringify(armazemIds));
+  const { data } = await http.post('/movimentacoes/importar-vendas', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60000,
+  });
+  return data;
+}
+
+export {
+  login,
+  listarProdutos,
+  listarArmazens,
+  listarMapeamentos,
+  criarMapeamento,
+  atualizarMapeamento,
+  removerMapeamento,
+  reprocessarNaoMapeados,
+  importarVendas,
+};

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { useMobile } from './hooks/useMobile';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import NotificationStack from './components/common/NotificationStack';
@@ -10,6 +11,7 @@ import StockMatrixPage from './pages/StockMatrixPage';
 import ConferencesPage from './pages/ConferencesPage';
 import LedgerHistoryPage from './pages/LedgerHistoryPage';
 import ProductsPage from './pages/ProductsPage';
+import MappingsPage from './pages/MappingsPage';
 import UsersPage from './pages/UsersPage';
 import SettingsPage from './pages/SettingsPage';
 
@@ -19,6 +21,7 @@ const TITLES = {
   '/conferências': 'Auditoria de Conferências',
   '/ledger': 'Ledger de Movimentações',
   '/produtos': 'Cadastro de SKUs (Master Data)',
+  '/mapeamentos': 'Mapeamento de Anúncios',
   '/usuarios': 'Gestão de Operadores',
   '/configuracoes': 'Configurações',
 };
@@ -49,6 +52,7 @@ function AppRoutes() {
             <Route path="/conferências" element={<ConferencesPage />} />
             <Route path="/ledger" element={<LedgerHistoryPage />} />
             <Route path="/produtos" element={<ProductsPage />} />
+            <Route path="/mapeamentos" element={<MappingsPage />} />
             <Route path="/usuarios" element={<UsersPage />} />
             <Route path="/configuracoes" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

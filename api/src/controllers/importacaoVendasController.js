@@ -65,7 +65,29 @@ async function importar(req, res, next) {
         continue;
       }
 
-      const mapeamento = await MapeamentoAnuncio.findBySkuErp(skuErp);
+      let mapeamento = await MapeamentoAnuncio.findBySkuErp(skuErp);
+
+      if (!mapeamento) {
+        // Fallback: se o código Upseller for idêntico a um código da tabela skus, usa e cria o mapeamento automaticamente
+        const db = require('../config/db');
+        const skuRes = await db.query('SELECT id, sku, descricao FROM skus WHERE sku = $1 LIMIT 1', [skuErp]);
+        
+        if (skuRes.rows.length > 0) {
+          const skuData = skuRes.rows[0];
+          
+          // Auto-heal: cria o mapeamento para usos futuros
+          await db.query(
+            'INSERT INTO mapeamento_anuncios_sku (sku_erp, nome_anuncio, sku_id, ativo) VALUES ($1, $2, $3, TRUE) ON CONFLICT DO NOTHING',
+            [skuErp, nomeAnuncio || skuData.descricao, skuData.id]
+          );
+
+          mapeamento = {
+            sku_id: skuData.id,
+            sku: skuData.sku,
+            sku_descricao: skuData.descricao,
+          };
+        }
+      }
 
       if (!mapeamento) {
         naoMapeados.push({
@@ -73,6 +95,7 @@ async function importar(req, res, next) {
           nomeAnuncio,
           skuErp,
           qtdVendida,
+          variacao,
         });
         continue;
       }
@@ -111,6 +134,40 @@ async function importar(req, res, next) {
       }
     }
 
+    // Gera planilha de não sincronizados quando houver erros ou não mapeados
+    let arquivoErrosBase64 = null;
+    if (erros.length > 0 || naoMapeados.length > 0) {
+      const wb = XLSX.utils.book_new();
+
+      if (erros.length > 0) {
+        const wsErros = XLSX.utils.json_to_sheet(
+          erros.map((e) => ({
+            'N° de Pedido': e.numeroPedido || '',
+            'Nome do Anúncio': e.nomeAnuncio || '',
+            'SKU ERP': e.skuErp || '',
+            'Armazém': e.armazemId || '',
+            'Motivo': e.motivo || '',
+          }))
+        );
+        XLSX.utils.book_append_sheet(wb, wsErros, 'Erros');
+      }
+
+      if (naoMapeados.length > 0) {
+        const wsNaoMapeados = XLSX.utils.json_to_sheet(
+          naoMapeados.map((n) => ({
+            'N° de Pedido': n.numeroPedido || '',
+            'Nome do Anúncio': n.nomeAnuncio || '',
+            'SKU ERP': n.skuErp || '',
+            'Qtd. Vendida': n.qtdVendida || 0,
+          }))
+        );
+        XLSX.utils.book_append_sheet(wb, wsNaoMapeados, 'Não Mapeados');
+      }
+
+      const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+      arquivoErrosBase64 = buffer.toString('base64');
+    }
+
     return res.json({
       resumo: {
         totalLinhas:    dadosLinhas.length,
@@ -121,6 +178,7 @@ async function importar(req, res, next) {
       processados,
       naoMapeados,
       erros,
+      arquivoErrosBase64,
     });
   } catch (err) {
     return next(err);

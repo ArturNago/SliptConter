@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Boxes, History, Camera, Layers, Users, Settings, LogOut, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Boxes, History, Camera, Layers, Users, Settings, LogOut, Sun, Moon, Link2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/conferências', label: 'Conferências', icon: Camera },
   { to: '/ledger', label: 'Movimentações', icon: History },
   { to: '/produtos', label: 'Cadastro (SKUs)', icon: Layers },
+  { to: '/mapeamentos', label: 'Mapeamentos', icon: Link2 },
   { to: '/usuarios', label: 'Operadores', icon: Users },
   { to: '/configuracoes', label: 'Configurações', icon: Settings },
 ];

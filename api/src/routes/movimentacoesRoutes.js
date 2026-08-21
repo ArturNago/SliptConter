@@ -23,6 +23,7 @@ const router = express.Router();
 router.use(autenticar);
 
 router.post('/importar-vendas', uploadXlsx.single('arquivo'), importacaoVendasController.importar);
+router.post('/reprocessar-nao-mapeados', movimentacoesController.reprocessarNaoMapeados);
 router.get('/', movimentacoesController.listar);
 router.get('/:id', movimentacoesController.buscarPorId);
 
