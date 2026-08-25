@@ -80,10 +80,9 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+      <div className="mobile-stack" style={{ marginBottom: 16 }}>
         <input
           className="input"
-          style={{ maxWidth: 320 }}
           placeholder="Buscar SKU / Descrição…"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
@@ -108,12 +107,12 @@ export default function ProductsPage() {
           <>
             <Input label="SKU" value={editando.sku} onChange={(e) => setEditando({ ...editando, sku: e.target.value })} disabled={!!editando.id} />
             <Input label="Descrição" value={editando.descricao} onChange={(e) => setEditando({ ...editando, descricao: e.target.value })} />
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div className="form-row">
               <Input label="Volumes/Camada" type="number" value={editando.volumesPorCamada} onChange={(e) => setEditando({ ...editando, volumesPorCamada: e.target.value })} />
               <Input label="Camadas Máx." type="number" value={editando.camadasMaximasPalete} onChange={(e) => setEditando({ ...editando, camadasMaximasPalete: e.target.value })} />
             </div>
             <Input label="Código EAN" value={editando.codigoBarrasEan} onChange={(e) => setEditando({ ...editando, codigoBarrasEan: e.target.value })} />
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div className="form-row">
               <Input label="Custo Médio" type="number" step="0.01" value={editando.custoMedio} onChange={(e) => setEditando({ ...editando, custoMedio: e.target.value })} />
               <Input label="Preço Venda" type="number" step="0.01" value={editando.precoVenda} onChange={(e) => setEditando({ ...editando, precoVenda: e.target.value })} />
             </div>

@@ -92,7 +92,50 @@ async function dashboardMetrics(req, res, next) {
       []
     );
 
-    // 7. Distribuição por armazém (saldo total por armazém).
+    // 7. Produto mais vendido nos últimos 30 dias (por quantidade de saídas).
+    const produtoMaisVendidoRes = await db.query(
+      `SELECT s.id AS sku_id,
+              s.sku,
+              s.descricao,
+              COALESCE(SUM(m.quantidade), 0)::int AS quantidade_vendida,
+              COALESCE(SUM(m.quantidade * COALESCE(s.custo_medio, 0)), 0)::numeric AS valor_vendido
+       FROM movimentacoes_estoque m
+       JOIN skus s ON s.id = m.sku_id
+       WHERE m.tipo = 'saida'
+         AND m.created_at >= CURRENT_DATE - INTERVAL '30 days'
+       GROUP BY s.id, s.sku, s.descricao
+       ORDER BY quantidade_vendida DESC
+       LIMIT 1`,
+      []
+    );
+
+    // 8. Crescimento de vendas: compara últimos 30 dias com os 30 dias anteriores.
+    const crescimentoRes = await db.query(
+      `WITH periodo_atual AS (
+         SELECT COALESCE(SUM(quantidade), 0)::int AS total
+         FROM movimentacoes_estoque
+         WHERE tipo = 'saida'
+           AND created_at >= CURRENT_DATE - INTERVAL '30 days'
+       ),
+       periodo_anterior AS (
+         SELECT COALESCE(SUM(quantidade), 0)::int AS total
+         FROM movimentacoes_estoque
+         WHERE tipo = 'saida'
+           AND created_at >= CURRENT_DATE - INTERVAL '60 days'
+           AND created_at < CURRENT_DATE - INTERVAL '30 days'
+       )
+       SELECT
+         a.total AS vendas_ultimos_30dias,
+         p.total AS vendas_30dias_anteriores,
+         CASE
+           WHEN p.total = 0 THEN NULL
+           ELSE ROUND(((a.total - p.total)::numeric / p.total) * 100, 2)
+         END AS crescimento_percentual
+       FROM periodo_atual a, periodo_anterior p`,
+      []
+    );
+
+    // 9. Distribuição por armazém (saldo total por armazém).
     const porArmazemRes = await db.query(
       `SELECT a.id, a.nome,
               COALESCE(SUM(m.quantidade), 0)::int AS saldo
@@ -104,7 +147,7 @@ async function dashboardMetrics(req, res, next) {
       []
     );
 
-    // 8. Distribuição por categoria (saldo total por categoria do SKU/Pai).
+    // 10. Distribuição por categoria (saldo total por categoria do SKU/Pai).
     const porCategoriaRes = await db.query(
        `SELECT COALESCE(NULLIF(s.categoria, ''), p.categoria, 'Sem categoria') AS categoria,
                COALESCE(SUM(m.quantidade), 0)::int AS saldo
@@ -119,6 +162,9 @@ async function dashboardMetrics(req, res, next) {
     );
 
     const base = estoqueRes.rows[0];
+    const crescimento = crescimentoRes.rows[0] || {};
+    const produtoMaisVendido = produtoMaisVendidoRes.rows[0] || null;
+
     return res.json({
       totalSkusAtivos: parseInt(base.totalSkusAtivos, 10),
       totalPecasEstoque: parseInt(base.totalPecasEstoque, 10),
@@ -131,6 +177,13 @@ async function dashboardMetrics(req, res, next) {
       serieTemporal: serieRes.rows,
       distribuicaoPorArmazem: porArmazemRes.rows,
       distribuicaoPorCategoria: porCategoriaRes.rows,
+      // Métricas fixas solicitadas.
+      produtoMaisVendido,
+      crescimentoVendas: {
+        vendas_ultimos_30dias: parseInt(crescimento.vendas_ultimos_30dias || 0, 10),
+        vendas_30dias_anteriores: parseInt(crescimento.vendas_30dias_anteriores || 0, 10),
+        crescimento_percentual: crescimento.crescimento_percentual,
+      },
     });
   } catch (err) {
     return next(err);

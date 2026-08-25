@@ -7,8 +7,10 @@ import { View, ActivityIndicator } from 'react-native';
 
 import LoginScreen from './screens/LoginScreen';
 import LancarContagemScreen from './screens/LancarContagemScreen';
+import ContagemIAReviewScreen from './screens/ContagemIAReviewScreen';
 import ProdutoFormScreen from './screens/ProdutoFormScreen';
 import ArmazemFormScreen from './screens/ArmazemFormScreen';
+import InventarioContagemScreen from './screens/InventarioContagemScreen';
 import MainTabs from './navigation/MainTabs';
 
 import localDb from './services/localDb';
@@ -67,6 +69,8 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Armazens" component={MainTabs} />
           <Stack.Screen name="LancarContagem" component={LancarContagemScreen} />
+          <Stack.Screen name="ContagemIAReview" component={ContagemIAReviewScreen} />
+          <Stack.Screen name="InventarioContagem" component={InventarioContagemScreen} />
           <Stack.Screen name="ProdutoForm" component={ProdutoFormScreen} />
           <Stack.Screen name="ArmazemForm" component={ArmazemFormScreen} />
         </Stack.Navigator>

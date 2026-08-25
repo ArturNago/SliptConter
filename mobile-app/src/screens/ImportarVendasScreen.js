@@ -19,7 +19,7 @@ import ScreenHeader from '../components/ScreenHeader';
 export default function ImportarVendasScreen({ navigation }) {
   const [arquivo, setArquivo] = useState(null);
   const [armazens, setArmazens] = useState([]);
-  const [armazemIdsSelecionados, setArmazemIdsSelecionados] = useState([]);
+  const [armazemIdSelecionado, setArmazemIdSelecionado] = useState(null);
   
   const [loadingArmazens, setLoadingArmazens] = useState(true);
   const [importing, setImporting] = useState(false);
@@ -36,6 +36,9 @@ export default function ImportarVendasScreen({ navigation }) {
       setLoadingArmazens(true);
       const data = await api.listarArmazens();
       setArmazens(data || []);
+      if (data?.length > 0 && !armazemIdSelecionado) {
+        setArmazemIdSelecionado(data[0].id);
+      }
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar a lista de armazéns.');
     } finally {
@@ -58,19 +61,20 @@ export default function ImportarVendasScreen({ navigation }) {
     }
   };
 
-  const toggleArmazem = (id) => {
-    setArmazemIdsSelecionados(prev => 
-      prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
-    );
+  const selecionarArmazem = (id) => {
+    setArmazemIdSelecionado(id);
   };
 
   const handleImportar = async () => {
     if (!arquivo) return;
-    if (armazemIdsSelecionados.length === 0) return;
+    if (!armazemIdSelecionado) {
+      Alert.alert('Aviso', 'Selecione o armazém de saída.');
+      return;
+    }
 
     try {
       setImporting(true);
-      const data = await api.importarVendas(arquivo.uri, arquivo.name, armazemIdsSelecionados);
+      const data = await api.importarVendas(arquivo.uri, arquivo.name, [armazemIdSelecionado]);
       setResultado(data);
     } catch (error) {
       Alert.alert('Erro', error.message || 'Falha na importação.');
@@ -191,9 +195,9 @@ export default function ImportarVendasScreen({ navigation }) {
           </View>
         </Pressable>
 
-        <Text style={styles.sectionTitle}>2. Selecionar Armazéns</Text>
+        <Text style={styles.sectionTitle}>2. Selecionar Armazém de Saída</Text>
         <Text style={styles.sectionSubtitle}>
-          Os pedidos importarão baixas de estoque nestes armazéns
+          Os pedidos darão baixa de estoque no armazém selecionado
         </Text>
         
         {loadingArmazens ? (
@@ -201,22 +205,25 @@ export default function ImportarVendasScreen({ navigation }) {
         ) : (
           <View style={styles.armazensCard}>
             {armazens.map((armazem, idx) => {
-              const isSelected = armazemIdsSelecionados.includes(armazem.id);
+              const isSelected = armazemIdSelecionado === armazem.id;
               return (
                 <Pressable 
                   key={armazem.id}
                   style={[
                     styles.armazemItem,
-                    idx !== armazens.length - 1 && styles.armazemItemBorder
+                    idx !== armazens.length - 1 && styles.armazemItemBorder,
+                    isSelected && { backgroundColor: '#f0fdfa' }
                   ]}
-                  onPress={() => toggleArmazem(armazem.id)}
+                  onPress={() => selecionarArmazem(armazem.id)}
                 >
                   <MaterialCommunityIcons 
-                    name={isSelected ? "checkbox-marked" : "checkbox-blank-outline"} 
+                    name={isSelected ? "radiobox-marked" : "radiobox-blank"} 
                     size={24} 
                     color={isSelected ? "#0F766E" : "#cbd5e1"} 
                   />
-                  <Text style={styles.armazemName}>{armazem.nome}</Text>
+                  <Text style={[styles.armazemName, isSelected && { fontWeight: '700', color: '#0F766E' }]}>
+                    {armazem.nome}
+                  </Text>
                 </Pressable>
               );
             })}
@@ -232,11 +239,11 @@ export default function ImportarVendasScreen({ navigation }) {
         <Pressable 
           style={({pressed}) => [
             styles.importButton, 
-            isButtonDisabled && styles.importButtonDisabled,
-            pressed && !isButtonDisabled && styles.importButtonPressed
+            (!arquivo || !armazemIdSelecionado || importing) && styles.importButtonDisabled,
+            pressed && (!arquivo || !armazemIdSelecionado || importing) && styles.importButtonPressed
           ]}
           onPress={handleImportar}
-          disabled={isButtonDisabled}
+          disabled={!arquivo || !armazemIdSelecionado || importing}
         >
           {importing ? (
             <ActivityIndicator color="#fff" />

@@ -72,13 +72,13 @@ export default function MappingsPage() {
   ];
 
   return (
-    <div style={{ padding: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+    <div>
+      <div className="mobile-stack" style={{ marginBottom: '20px' }}>
         <h2 style={{ margin: 0 }}>Mapeamentos de Anúncios</h2>
         <Button onClick={abrirNovo}>Novo mapeamento</Button>
       </div>
 
-      <div style={{ marginBottom: '16px', maxWidth: '400px' }}>
+      <div style={{ marginBottom: '16px' }}>
         <Input
           label="Buscar"
           placeholder="Nome do anúncio, SKU ERP ou SKU sistema..."
@@ -87,43 +87,45 @@ export default function MappingsPage() {
         />
       </div>
 
-      {error && <div style={{ color: '#dc2626', marginBottom: '12px' }}>{error}</div>}
+      {error && <div style={{ color: 'var(--perigo)', marginBottom: '12px' }}>{error}</div>}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px' }}>
           <Spinner />
         </div>
       ) : (
-        <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              {columns.map((c) => (
-                <th key={c.key} style={{ textAlign: 'left', padding: '12px', borderBottom: '2px solid #e2e8f0' }}>
-                  {c.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {mapeamentos.length === 0 ? (
+        <div className="table-wrap">
+          <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
               <tr>
-                <td colSpan={columns.length} style={{ textAlign: 'center', padding: '24px', color: '#64748b' }}>
-                  Nenhum mapeamento encontrado.
-                </td>
+                {columns.map((c) => (
+                  <th key={c.key} style={{ textAlign: 'left', padding: '12px', borderBottom: '2px solid var(--borda)' }}>
+                    {c.label}
+                  </th>
+                ))}
               </tr>
-            ) : (
-              mapeamentos.map((row) => (
-                <tr key={row.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  {columns.map((c) => (
-                    <td key={c.key} style={{ padding: '12px' }}>
-                      {c.render ? c.render(row[c.key], row) : row[c.key]}
-                    </td>
-                  ))}
+            </thead>
+            <tbody>
+              {mapeamentos.length === 0 ? (
+                <tr>
+                  <td colSpan={columns.length} style={{ textAlign: 'center', padding: '24px', color: 'var(--texto-suave)' }}>
+                    Nenhum mapeamento encontrado.
+                  </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                mapeamentos.map((row) => (
+                  <tr key={row.id} style={{ borderBottom: '1px solid var(--borda)' }}>
+                    {columns.map((c) => (
+                      <td key={c.key} style={{ padding: '12px' }}>
+                        {c.render ? c.render(row[c.key], row) : row[c.key]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <MapeamentoFormModal

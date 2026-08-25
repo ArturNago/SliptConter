@@ -47,6 +47,7 @@ export default function ImportSalesModal({ open, onClose, onImportSuccess }) {
 
     const formData = new FormData();
     formData.append('arquivo', file);
+    formData.append('armazemId', selectedArmazem);
     formData.append('armazemIds', JSON.stringify([selectedArmazem]));
 
     try {
@@ -141,10 +142,10 @@ export default function ImportSalesModal({ open, onClose, onImportSuccess }) {
             <h5 style={{ margin: '0 0 8px 0' }}>SKUs não mapeados</h5>
             <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '8px', background: '#fff' }}>
               {naoMapeados.map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderBottom: '1px solid #f1f5f9' }}>
+                <div key={idx} className="result-item">
                   <div>
                     <div style={{ fontWeight: 500 }}>{item.nomeAnuncio || 'Sem nome'}</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>
+                    <div style={{ fontSize: '13px', color: 'var(--texto-suave)' }}>
                       SKU ERP: {item.skuErp} {item.variacao ? `• Var: ${item.variacao}` : ''} • Qtd: {item.qtdVendida}
                     </div>
                   </div>
@@ -158,14 +159,14 @@ export default function ImportSalesModal({ open, onClose, onImportSuccess }) {
         )}
 
         {(naoMapeados.length > 0 || erros.length > 0) && (
-          <div style={{ marginTop: '15px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="actions-row">
             <Button onClick={handleDownloadErros} disabled={!result?.arquivoErrosBase64}>
               Baixar planilha de não sincronizados (.xlsx)
             </Button>
             <Button variant="secondary" onClick={handleReprocessar} disabled={reprocessLoading || naoMapeados.length === 0}>
               {reprocessLoading ? <Spinner size={16} /> : 'Reprocessar pendentes'}
             </Button>
-            <p style={{ fontSize: '14px', color: '#666', marginTop: '8px', width: '100%' }}>
+            <p style={{ fontSize: '14px', color: 'var(--texto-suave)', marginTop: '8px', width: '100%' }}>
               {naoMapeados.length > 0 && erros.length > 0
                 ? 'A planilha contém abas separadas para erros e SKUs não mapeados.'
                 : naoMapeados.length > 0

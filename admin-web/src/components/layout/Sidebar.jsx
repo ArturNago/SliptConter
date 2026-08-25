@@ -1,38 +1,76 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Boxes, History, Camera, Layers, Users, Settings, LogOut, Sun, Moon, Link2 } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Camera,
+  Edit3,
+  ClipboardCheck,
+  TrendingUp,
+  FileSpreadsheet,
+  Boxes,
+  History,
+  Layers,
+  Users,
+  Settings,
+  LogOut,
+  Sun,
+  Moon,
+  Link2,
+  X,
+} from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/contagem', label: 'Contagem IA (Câmera)', icon: Camera },
+  { to: '/contagem-manual', label: 'Contagem Manual', icon: Edit3 },
+  { to: '/inventarios-contagem', label: 'Inventário (Galpão)', icon: ClipboardCheck },
+  { to: '/pcp', label: 'Painel PCP (Curva ABC)', icon: TrendingUp },
+  { to: '/inventarios', label: 'Gestão Inventários', icon: ClipboardCheck },
+  { to: '/vendas-conciliacao', label: 'Conciliação Vendas', icon: FileSpreadsheet },
   { to: '/estoque', label: 'Matriz de Estoque', icon: Boxes },
-  { to: '/conferências', label: 'Conferências', icon: Camera },
-  { to: '/ledger', label: 'Movimentações', icon: History },
+  { to: '/conferências', label: 'Histórico Conferências', icon: History },
+  { to: '/ledger', label: 'Ledger Movimentações', icon: History },
   { to: '/produtos', label: 'Cadastro (SKUs)', icon: Layers },
-  { to: '/mapeamentos', label: 'Mapeamentos', icon: Link2 },
+  { to: '/mapeamentos', label: 'Mapeamentos & Kits', icon: Link2 },
   { to: '/usuarios', label: 'Operadores', icon: Users },
   { to: '/configuracoes', label: 'Configurações', icon: Settings },
 ];
 
-export default function Sidebar({ collapsed, onToggle }) {
+export default function Sidebar({ collapsed, onToggle, mobileOpen, onClose }) {
   const { usuario, logout } = useAuth();
   const { tema, alternar } = useTheme();
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      <div className="sidebar-brand">
-        <img src="/logo.svg" alt="SliptConter" />
-        <span>SliptConter</span>
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
+      <div className="sidebar-brand" style={{ justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <img src="/logo.svg" alt="Tebarrot Estoque" />
+          <span>Tebarrot Estoque</span>
+        </div>
+        {mobileOpen && (
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={onClose}
+            style={{ color: 'var(--texto-suave)', padding: 4 }}
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
-      <nav style={{ flex: 1, marginTop: 8 }}>
+      <nav style={{ flex: 1, marginTop: 8, overflowY: 'auto' }}>
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           return (
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={() => {
+                if (onClose) onClose();
+              }}
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
               <Icon size={18} />

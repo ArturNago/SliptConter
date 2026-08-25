@@ -1,13 +1,30 @@
 /**
  * Cliente HTTP da API para o Painel Web Admin.
- * Base URL resolvida em build-time via __API_URL__ (definido no vite.config.js
- * a partir de VITE_API_URL / fallback do túnel Cloudflare).
- *
- * Mantém o token JWT em sessionStorage e redireciona para o login em 401.
+ * Base URL resolvida em build-time ou dinamicamente no navegador.
  */
 import axios from 'axios';
 
-const API_URL = (typeof __API_URL__ !== 'undefined' ? __API_URL__ : 'https://bemviverdecor.com.br');
+function getBaseApiUrl() {
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (typeof __API_URL__ !== 'undefined' && __API_URL__ && !__API_URL__.includes('bemviverdecor')) {
+    return __API_URL__;
+  }
+  if (typeof window !== 'undefined' && window.location) {
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    // Se estiver rodando no Vite dev server (porta 5173)
+    if (port === '5173') {
+      return `http://${hostname}:3000`;
+    }
+    // Quando servido pelo container Nginx (porta 80, 8080, 8081 ou admin.puratienda.store), usa /api relativo
+    return '';
+  }
+  return '';
+}
+
+const API_URL = getBaseApiUrl();
 
 export const TOKEN_KEY = 'sliptconter_admin_token';
 
@@ -40,16 +57,12 @@ http.interceptors.response.use(
   }
 );
 
-export default http;
-
-// ---- Autenticação ----
+// ---- Métodos Auxiliares da API ----
 
 async function login(username, senha) {
   const { data } = await http.post('/auth/login', { username, senha });
   return data;
 }
-
-// ---- Produtos ----
 
 async function listarProdutos(filtros = {}) {
   const params = Object.fromEntries(
@@ -63,8 +76,6 @@ async function listarArmazens() {
   const { data } = await http.get('/armazens');
   return data;
 }
-
-// ---- Mapeamentos de Anúncios ----
 
 async function listarMapeamentos(filtros = {}) {
   const params = Object.fromEntries(
@@ -94,22 +105,94 @@ async function reprocessarNaoMapeados(armazemIds, naoMapeados) {
   return data;
 }
 
-// ---- Importação de Vendas ----
-
-async function importarVendas(arquivoUri, nomeArquivo, armazemIds) {
-  const form = new FormData();
-  form.append('arquivo', {
-    uri: arquivoUri,
-    name: nomeArquivo,
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  });
-  form.append('armazemIds', JSON.stringify(armazemIds));
-  const { data } = await http.post('/movimentacoes/importar-vendas', form, {
+async function importarVendas(formData) {
+  const { data } = await http.post('/movimentacoes/importar-vendas', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
-    timeout: 60000,
   });
   return data;
 }
+
+async function listarLotesVendas(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, v]) => v !== undefined && v !== null && v !== '')
+  );
+  const { data } = await http.get('/movimentacoes/lotes-vendas', { params });
+  return data;
+}
+
+async function buscarLoteVenda(id) {
+  const { data } = await http.get(`/movimentacoes/lotes-vendas/${id}`);
+  return data;
+}
+
+async function estornarLoteVenda(id) {
+  const { data } = await http.post(`/movimentacoes/lotes-vendas/${id}/estornar`);
+  return data;
+}
+
+async function obterIndicadoresPCP() {
+  const { data } = await http.get('/pcp/indicadores');
+  return data;
+}
+
+async function listarInventarios(filtros = {}) {
+  const params = Object.fromEntries(
+    Object.entries(filtros).filter(([, v]) => v !== undefined && v !== null && v !== '')
+  );
+  const { data } = await http.get('/inventarios', { params });
+  return data;
+}
+
+async function buscarInventario(id, contagemCega = false) {
+  const { data } = await http.get(`/inventarios/${id}${contagemCega ? '?contagemCega=true' : ''}`);
+  return data;
+}
+
+async function criarInventario(payload) {
+  const { data } = await http.post('/inventarios', payload);
+  return data;
+}
+
+async function registrarContagemInventario(ordemId, skuId, quantidadeContada) {
+  const { data } = await http.post(`/inventarios/${ordemId}/contagem`, { skuId, quantidadeContada });
+  return data;
+}
+
+async function finalizarInventario(ordemId, itensAprovados = []) {
+  const { data } = await http.post(`/inventarios/${ordemId}/finalizar`, { itensAprovados });
+  return data;
+}
+
+async function cancelarInventario(ordemId) {
+  const { data } = await http.post(`/inventarios/${ordemId}/cancelar`);
+  return data;
+}
+
+// Anexa todas as funções utilitárias à instância do axios para permitir chamadas como api.listarProdutos()
+Object.assign(http, {
+  http,
+  login,
+  listarProdutos,
+  listarArmazens,
+  listarMapeamentos,
+  criarMapeamento,
+  atualizarMapeamento,
+  removerMapeamento,
+  reprocessarNaoMapeados,
+  importarVendas,
+  listarLotesVendas,
+  buscarLoteVenda,
+  estornarLoteVenda,
+  obterIndicadoresPCP,
+  listarInventarios,
+  buscarInventario,
+  criarInventario,
+  registrarContagemInventario,
+  finalizarInventario,
+  cancelarInventario,
+});
+
+export default http;
 
 export {
   login,
@@ -121,4 +204,14 @@ export {
   removerMapeamento,
   reprocessarNaoMapeados,
   importarVendas,
+  listarLotesVendas,
+  buscarLoteVenda,
+  estornarLoteVenda,
+  obterIndicadoresPCP,
+  listarInventarios,
+  buscarInventario,
+  criarInventario,
+  registrarContagemInventario,
+  finalizarInventario,
+  cancelarInventario,
 };

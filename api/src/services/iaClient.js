@@ -1,5 +1,5 @@
 /**
- * Cliente HTTP para o worker de IA (V1 — sugestão de contagem de camadas).
+ * Cliente HTTP para o worker de IA (V1 — sugestão de contagem de caixas).
  *
  * Fica completamente desligado em V0 (IA_WORKER_ENABLED=false); o app
  * mobile funciona normalmente com contagem manual quando isso ocorre.
@@ -8,11 +8,11 @@ const fs = require('fs');
 const env = require('../config/env');
 
 /**
- * Envia a imagem da pilha para o worker de IA e retorna o número de
- * camadas sugerido pelo YOLOv8.
+ * Envia a imagem da pilha para o worker de IA e retorna as caixas da
+ * camada frontal detectadas pelo YOLOv12.
  *
  * @param {string} absoluteImagePath caminho absoluto do arquivo já salvo
- * @returns {Promise<{ camadasSugeridas: number, confianca: number } | null>}
+ * @returns {Promise<{ caixas: Array, caixasPorCamada: number, confianca: number } | null>}
  *   retorna null quando a IA está desabilitada ou indisponível — o
  *   controller deve tratar isso caindo para o fluxo manual.
  */
@@ -36,8 +36,9 @@ async function sugerirContagem(absoluteImagePath) {
 
     const data = await response.json();
     return {
-      camadasSugeridas: data.camadas_sugeridas,
-      confianca: data.confianca,
+      caixas: data.caixas || [],
+      caixasPorCamada: data.caixas_por_camada ?? 0,
+      confianca: data.confianca ?? 0.0,
     };
   } catch (err) {
     console.warn('[iaClient] falha ao consultar worker de IA, seguindo em modo manual:', err.message);

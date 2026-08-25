@@ -1,10 +1,13 @@
 """
-Roda o YOLOv8 sobre a foto de uma pilha e retorna o número de camadas
-sugerido (doc, seção 5.2 — "V1: YOLOv8 sugere o número de camadas").
+Roda o YOLOv12 sobre a foto de uma pilha e retorna as caixas da camada
+frontal detectadas (doc, seção 5.2 — "V1: YOLOv12 sugere contagem de caixas").
 
-O modelo é treinado para detectar a classe "camada" (uma caixa por camada
-visível na foto, seguindo o overlay-guia do app). O número de camadas é
-simplesmente a contagem de detecções acima do limiar de confiança.
+O modelo é treinado para detectar a classe "caixa" (uma bbox por caixa da
+camada frontal visível na foto, seguindo o overlay-guia do app). O número de
+caixas da camada é a contagem de detecções acima do limiar de confiança.
+
+Coordenadas são normalizadas (0–1, padrão YOLO) para que o overlay do app
+escale em qualquer dispositivo.
 """
 from pathlib import Path
 from functools import lru_cache
@@ -32,7 +35,7 @@ def modelo_disponivel() -> bool:
     return config.MODEL_PATH.exists()
 
 
-def predict_camadas(image_path: str, model_path: str | None = None):
+def predict_caixas(image_path: str, model_path: str | None = None):
     """
     Executa a inferência sobre uma imagem.
 
@@ -42,7 +45,10 @@ def predict_camadas(image_path: str, model_path: str | None = None):
             candidato diferente do modelo em produção.
 
     Returns:
-        dict com `camadas_sugeridas` (int) e `confianca` (float, 0-1),
+        dict com:
+            caixas: [{x_center, y_center, width, height, conf}] (coords 0–1)
+            caixas_por_camada: int (nº de detecções ≥ limiar)
+            confianca: float (média das confs válidas, 0–1)
         ou None se o modelo não estiver disponível.
     """
     if model_path:
@@ -56,18 +62,39 @@ def predict_camadas(image_path: str, model_path: str | None = None):
 
     results = model.predict(source=image_path, verbose=False)
     if not results:
-        return {"camadas_sugeridas": 0, "confianca": 0.0}
+        return {"caixas": [], "caixas_por_camada": 0, "confianca": 0.0}
 
     result = results[0]
     boxes = result.boxes
 
     if boxes is None or len(boxes) == 0:
-        return {"camadas_sugeridas": 0, "confianca": 0.0}
+        return {"caixas": [], "caixas_por_camada": 0, "confianca": 0.0}
 
     confidencias = boxes.conf.tolist()
     validas = [c for c in confidencias if c >= config.CONFIDENCE_THRESHOLD]
 
-    camadas_sugeridas = len(validas)
-    confianca_media = sum(validas) / len(validas) if validas else 0.0
+    if not validas:
+        return {"caixas": [], "caixas_por_camada": 0, "confianca": 0.0}
 
-    return {"camadas_sugeridas": camadas_sugeridas, "confianca": round(confianca_media, 4)}
+    caixas = []
+    for i, box in enumerate(boxes):
+        conf = float(confidencias[i])
+        if conf < config.CONFIDENCE_THRESHOLD:
+            continue
+        xywh = box.xywhn.tolist()[0]
+        caixas.append({
+            "x_center": round(float(xywh[0]), 6),
+            "y_center": round(float(xywh[1]), 6),
+            "width": round(float(xywh[2]), 6),
+            "height": round(float(xywh[3]), 6),
+            "conf": round(conf, 4),
+        })
+
+    caixas_por_camada = len(caixas)
+    confianca_media = sum(c["conf"] for c in caixas) / caixas_por_camada
+
+    return {
+        "caixas": caixas,
+        "caixas_por_camada": caixas_por_camada,
+        "confianca": round(confianca_media, 4),
+    }

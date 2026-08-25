@@ -7,6 +7,8 @@ const movimentacoesRoutes = require('./movimentacoesRoutes');
 const armazensRoutes = require('./armazensRoutes');
 const mapeamentosRoutes = require('./mapeamentosRoutes');
 const adminRoutes = require('./adminRoutes');
+const inventariosRoutes = require('./inventariosRoutes');
+const pcpRoutes = require('./pcpRoutes');
 
 const router = express.Router();
 
@@ -27,6 +29,8 @@ router.use('/conferencias', conferenciasRoutes);
 router.use('/movimentacoes', movimentacoesRoutes);
 router.use('/armazens', armazensRoutes);
 router.use('/mapeamentos', mapeamentosRoutes);
+router.use('/inventarios', inventariosRoutes);
+router.use('/pcp', pcpRoutes);
 router.use('/admin', adminRoutes);
 
 module.exports = router;

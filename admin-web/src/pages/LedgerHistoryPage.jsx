@@ -39,7 +39,7 @@ export default function LedgerHistoryPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px' }}>
+      <div className="mobile-stack" style={{ marginBottom: '20px' }}>
         <div className="filters" style={{ margin: 0 }}>
           <div className="field">
             <label className="field-label">Tipo</label>

@@ -35,7 +35,10 @@ DB = {
 
 # Confiança mínima para considerar uma predição válida (abaixo disso,
 # o worker retorna "sem sugestão" e o app cai para contagem manual).
-CONFIDENCE_THRESHOLD = float(os.getenv("IA_CONFIDENCE_THRESHOLD", "0.5"))
+CONFIDENCE_THRESHOLD = float(os.getenv("IA_CONFIDENCE_THRESHOLD", "0.25"))
 
 # Margem mínima de melhoria exigida do candidato para promovê-lo a produção.
 MIN_IMPROVEMENT = float(os.getenv("IA_MIN_IMPROVEMENT", "0.0"))
+
+# Índice da classe "caixa" no modelo YOLOv12 (detecção da camada frontal).
+CLASSE_CAIXA = 0

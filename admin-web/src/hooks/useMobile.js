@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const DEFAULT_BREAKPOINT = 768;
+const DEFAULT_BREAKPOINT = 992;
 
 export function useMobile(breakpoint = DEFAULT_BREAKPOINT) {
   const [matches, setMatches] = useState(() => {

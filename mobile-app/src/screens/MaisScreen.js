@@ -68,6 +68,17 @@ export default function MaisScreen({ navigation }) {
 
           <Pressable 
             style={({ pressed }) => [styles.menuItem, pressed && styles.pressed]}
+            onPress={() => navigation.navigate('InventarioContagem')}
+          >
+            <View style={styles.menuItemIcon}>
+              <MaterialCommunityIcons name="clipboard-check-outline" size={24} color="#0F766E" />
+            </View>
+            <Text style={styles.menuItemLabel}>Inventário Cíclico (Contagem)</Text>
+            <MaterialCommunityIcons name="chevron-right" size={24} color="#cbd5e1" />
+          </Pressable>
+
+          <Pressable 
+            style={({ pressed }) => [styles.menuItem, pressed && styles.pressed]}
             onPress={() => navigation.navigate('ImportarVendas')}
           >
             <View style={styles.menuItemIcon}>

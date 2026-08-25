@@ -5,19 +5,15 @@ Fonte da verdade: tabela `conferencias`, filtrando
 `status_dataset = 'pendente_treinamento'`. Cada conferência confirmada
 gera:
   - uma imagem copiada de /dataset/inbound para /dataset/images/{train,val}
-  - um arquivo de label YOLO (.txt) com uma caixa por camada confirmada
+  - um arquivo de label YOLO (.txt) com uma bbox por caixa da camada frontal
 
-Heurística de geração de labels
---------------------------------
-O app captura a foto sempre com o mesmo overlay-guia fixo (ângulo/distância
-padronizados — doc, seção 5.2), então a pilha ocupa uma faixa vertical
-previsível do quadro. Cada camada confirmada é aproximada por uma faixa
-horizontal de altura igual a 1/N (N = número de camadas), ocupando a
-largura útil do quadro. Essa heurística é o ponto de partida do dataset;
-como o app já salva `camadas_informadas` confirmado por um humano, o
-modelo aprende a localizar essas faixas e melhora a cada ciclo de retreino
-conforme mais dados reais entram.
+Esquema novo (migration 017):
+  - Lê `quantidade_contada` (renomeada de `camadas_informadas` na migration 011).
+  - Lê `caixas_por_camada` e `deteccoes_ia` (JSONB com as boxes normalizadas).
+  - Gera labels YOLO da classe `caixa` a partir das detecções reais da IA
+    (não mais heurística de faixas horizontais sintéticas).
 """
+import json
 import random
 import shutil
 from pathlib import Path
@@ -27,14 +23,8 @@ import psycopg2.extras
 
 import config
 
-CLASSE_CAMADA = 0  # única classe do modelo: "camada"
+CLASSE_CAIXA = 0  # única classe do modelo: "caixa"
 VAL_SPLIT = 0.2
-
-# Faixa útil do quadro ocupada pela pilha (o restante é margem do overlay-guia).
-FAIXA_UTIL_Y_INICIO = 0.05
-FAIXA_UTIL_Y_FIM = 0.95
-FAIXA_UTIL_X_INICIO = 0.15
-FAIXA_UTIL_X_FIM = 0.85
 
 
 def _conectar():
@@ -47,9 +37,11 @@ def _buscar_conferencias_pendentes(limite=500):
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(
                 """
-                SELECT id, url_imagem_local, camadas_informadas
+                SELECT id, url_imagem_local, quantidade_contada,
+                       caixas_por_camada, deteccoes_ia
                 FROM conferencias
                 WHERE status_dataset = 'pendente_treinamento'
+                  AND url_imagem_local IS NOT NULL
                 ORDER BY created_at ASC
                 LIMIT %s
                 """,
@@ -60,20 +52,31 @@ def _buscar_conferencias_pendentes(limite=500):
         conn.close()
 
 
-def _gerar_label(camadas_informadas: int) -> str:
-    """Gera o conteúdo do arquivo .txt YOLO para N camadas confirmadas."""
-    if camadas_informadas <= 0:
+def _gerar_label(deteccoes_ia, caixas_por_camada) -> str:
+    """
+    Gera o conteúdo do arquivo .txt YOLO para as caixas da camada frontal.
+
+    Prioriza `deteccoes_ia` (JSONB com boxes normalizadas 0–1). Na ausência,
+    retorna vazio (sem labels reais o detector não treina).
+    """
+    if not deteccoes_ia:
         return ""
 
-    altura_faixa = (FAIXA_UTIL_Y_FIM - FAIXA_UTIL_Y_INICIO) / camadas_informadas
-    largura_box = FAIXA_UTIL_X_FIM - FAIXA_UTIL_X_INICIO
-    x_center = (FAIXA_UTIL_X_INICIO + FAIXA_UTIL_X_FIM) / 2
+    caixas = deteccoes_ia
+    if isinstance(caixas, str):
+        caixas = json.loads(caixas)
+
+    if not caixas:
+        return ""
 
     linhas = []
-    for i in range(camadas_informadas):
-        y_center = FAIXA_UTIL_Y_INICIO + altura_faixa * (i + 0.5)
+    for caixa in caixas:
+        x_center = caixa.get("x_center", 0.0)
+        y_center = caixa.get("y_center", 0.0)
+        width = caixa.get("width", 0.0)
+        height = caixa.get("height", 0.0)
         linhas.append(
-            f"{CLASSE_CAMADA} {x_center:.6f} {y_center:.6f} {largura_box:.6f} {altura_faixa:.6f}"
+            f"{CLASSE_CAIXA} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}"
         )
     return "\n".join(linhas)
 
@@ -99,13 +102,18 @@ def build(limite=500):
             print(f"[build_dataset] imagem ausente, ignorando: {origem}")
             continue
 
+        label_txt = _gerar_label(conf["deteccoes_ia"], conf["caixas_por_camada"])
+        if not label_txt:
+            print(f"[build_dataset] sem detecções IA para conferência {conf['id']}, ignorando.")
+            continue
+
         destino_dir = config.VAL_DIR if random.random() < VAL_SPLIT else config.TRAIN_DIR
         nome_base = origem.stem
         destino_img = destino_dir / origem.name
         destino_label = destino_dir / f"{nome_base}.txt"
 
         shutil.copy2(origem, destino_img)
-        destino_label.write_text(_gerar_label(conf["camadas_informadas"]), encoding="utf-8")
+        destino_label.write_text(label_txt, encoding="utf-8")
 
         ids_incluidas.append(conf["id"])
 
@@ -121,7 +129,7 @@ def _escrever_data_yaml():
         f"train: {config.TRAIN_DIR}\n"
         f"val: {config.VAL_DIR}\n"
         "nc: 1\n"
-        "names: ['camada']\n"
+        "names: ['caixa']\n"
     )
     data_yaml.write_text(conteudo, encoding="utf-8")
 

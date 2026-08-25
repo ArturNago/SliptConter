@@ -9,14 +9,22 @@
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
-require('dotenv').config();
+
+// Tenta carregar .env local e da raiz
+if (fs.existsSync(path.resolve(__dirname, '../.env'))) {
+  require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+} else if (fs.existsSync(path.resolve(__dirname, '../../.env'))) {
+  require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+} else {
+  require('dotenv').config();
+}
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER || 'tebarrot',
   password: process.env.POSTGRES_PASSWORD || 'tebarrot',
   database: process.env.POSTGRES_DB || 'tebarrot_estoque',
   host: process.env.POSTGRES_HOST || 'localhost',
-  port: parseInt(process.env.POSTGRES_PORT, 10) || 5432,
+  port: parseInt(process.env.POSTGRES_HOST_PORT || process.env.POSTGRES_PORT, 10) || 5432,
 });
 
 async function ensureControlTable() {

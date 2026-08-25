@@ -64,6 +64,10 @@ async function initDb() {
       imagem_uri TEXT,
       quantidade_contada INTEGER NOT NULL,
       quantidade_sugerida_ia INTEGER,
+      caixas_por_camada INTEGER,
+      camadas_confirmadas INTEGER,
+      caixas_sugeridas_ia INTEGER,
+      deteccoes_ia TEXT,
       ajuste_manual INTEGER NOT NULL DEFAULT 0,
       origem TEXT NOT NULL DEFAULT 'manual',
       tipo_movimentacao TEXT NOT NULL DEFAULT 'entrada',
@@ -85,10 +89,11 @@ async function inserirPendente(item) {
 
   await db.runAsync(
     `INSERT INTO fila_conferencias
-      (id, produto_id, produto_sku, armazem_id, imagem_uri, quantidade_contada,
-       quantidade_sugerida_ia, ajuste_manual, origem, tipo_movimentacao,
-       status_envio, tentativas, criado_em)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', 0, ?)`,
+       (id, produto_id, produto_sku, armazem_id, imagem_uri, quantidade_contada,
+        quantidade_sugerida_ia, caixas_por_camada, camadas_confirmadas,
+        caixas_sugeridas_ia, deteccoes_ia, ajuste_manual, origem, tipo_movimentacao,
+        status_envio, tentativas, criado_em)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', 0, ?)`,
     [
       id,
       // A coluna mantém o nome histórico `produto_id`, mas armazena o id do SKU
@@ -99,6 +104,10 @@ async function inserirPendente(item) {
       item.imagemUri,
       item.quantidadeContada,
       item.quantidadeSugeridaIa ?? null,
+      item.caixasPorCamada ?? null,
+      item.camadasConfirmadas ?? null,
+      item.caixasSugeridasIa ?? null,
+      item.deteccoesIa ? JSON.stringify(item.deteccoesIa) : null,
       item.ajusteManual || 0,
       item.origem || 'manual',
       item.tipoMovimentacao || 'entrada',

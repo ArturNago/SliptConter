@@ -22,8 +22,12 @@ const { caminhoRelativo } = require('../middlewares/uploadMiddleware');
  *   quantidadeSugeridaIa (int, opcional — preenchido em V1)
  *   ajusteManual       (int, opcional, default 0)
  *   origem             ('manual' | 'ia', opcional, default 'manual')
- *   criadaOffline      (boolean, opcional — item veio da fila do SQLite local)
+ *   criadaOffline      (boolean, opcional — item veio da fila do celular)
  *   tipoMovimentacao   ('entrada' | 'saida' | 'ajuste', opcional, default 'entrada')
+ *   caixasPorCamada    (int, opcional — caixas detectadas na camada frontal, V1)
+ *   camadasConfirmadas (int, opcional — camadas confirmadas pelo operador, V1)
+ *   caixasSugeridasIa  (int, opcional — caixas sugeridas pela IA, V1)
+ *   deteccoesIa        (JSON string, opcional — bounding boxes normalizadas, V1)
  */
 async function criar(req, res, next) {
   try {
@@ -37,6 +41,10 @@ async function criar(req, res, next) {
       origem,
       criadaOffline,
       tipoMovimentacao,
+      caixasPorCamada,
+      camadasConfirmadas,
+      caixasSugeridasIa,
+      deteccoesIa,
     } = req.body;
 
     const skuId = skuIdBody || produtoId;
@@ -51,6 +59,15 @@ async function criar(req, res, next) {
 
     const urlImagemLocal = req.file ? caminhoRelativo(req.file.path) : null;
 
+    let deteccoesIaParsed = null;
+    if (deteccoesIa) {
+      try {
+        deteccoesIaParsed = typeof deteccoesIa === 'string' ? JSON.parse(deteccoesIa) : deteccoesIa;
+      } catch {
+        console.warn('[conferenciasController] deteccoesIa inválido, ignorando.');
+      }
+    }
+
     const { conferencia, movimentacao } = await conferenciaService.registrarConferencia({
       skuId,
       armazemId,
@@ -62,6 +79,10 @@ async function criar(req, res, next) {
       origem: origem === 'ia' ? 'ia' : 'manual',
       criadaOffline: criadaOffline === 'true' || criadaOffline === true,
       tipoMovimentacao: tipoMovimentacao || 'entrada',
+      caixasPorCamada: caixasPorCamada ? parseInt(caixasPorCamada, 10) : null,
+      camadasConfirmadas: camadasConfirmadas ? parseInt(camadasConfirmadas, 10) : null,
+      caixasSugeridasIa: caixasSugeridasIa ? parseInt(caixasSugeridasIa, 10) : null,
+      deteccoesIa: deteccoesIaParsed,
     });
 
     return res.status(201).json({ conferencia, movimentacao });

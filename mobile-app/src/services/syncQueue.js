@@ -57,12 +57,25 @@ async function flushQueue() {
     for (const item of pendentes) {
       try {
         const armazemId = item.armazem_id || await resolverArmazemPadrao();
+        let deteccoesIaParsed = null;
+        if (item.deteccoes_ia) {
+          try {
+            deteccoesIaParsed = typeof item.deteccoes_ia === 'string' ? JSON.parse(item.deteccoes_ia) : item.deteccoes_ia;
+          } catch {
+            deteccoesIaParsed = null;
+          }
+        }
+
         await api.criarConferencia({
           imagemUri: item.imagem_uri,
           skuId: item.produto_id, // coluna histórica; hoje guarda o id do SKU
           armazemId,
           quantidadeContada: item.quantidade_contada,
           quantidadeSugeridaIa: item.quantidade_sugerida_ia,
+          caixasPorCamada: item.caixas_por_camada,
+          camadasConfirmadas: item.camadas_confirmadas,
+          caixasSugeridasIa: item.caixas_sugeridas_ia,
+          deteccoesIa: deteccoesIaParsed,
           ajusteManual: item.ajuste_manual,
           origem: item.origem,
           criadaOffline: true,

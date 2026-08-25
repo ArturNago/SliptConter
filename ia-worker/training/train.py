@@ -1,11 +1,11 @@
 """
-Orquestra o ciclo de retreino periódico do YOLOv8 (doc, seção 5.6, completo):
+Orquestra o ciclo de retreino periódico do YOLOv12 (doc, seção 5.6, completo):
 
     1. build_dataset.build()          -> monta train/val a partir do banco
-    2. fine-tuning do YOLOv8           -> gera um novo candidato (best.pt)
+    2. fine-tuning do YOLOv12         -> gera um novo candidato (best.pt)
     3. validate_model.validar()        -> compara candidato x produção
     4. se aprovado: promove o modelo e marca as conferências como "treinado"
-       se reprovado: descarta o candidato, mantém o modelo em produção
+        se reprovado: descarta o candidato, mantém o modelo em produção
 
 Uso:
     python training/train.py
@@ -22,7 +22,7 @@ from training import build_dataset, validate_model  # noqa: E402
 
 EPOCHS = 50
 IMG_SIZE = 640
-BASE_WEIGHTS = "yolov8n.pt"  # ponto de partida: modelo pequeno pré-treinado (COCO)
+BASE_WEIGHTS = "yolo12n.pt"  # ponto de partida: YOLOv12 nano pré-treinado (COCO)
 
 
 def _marcar_conferencias_treinadas(ids):
