@@ -20,7 +20,7 @@ export default function ConferencesPage() {
       <p style={{ color: 'var(--texto-suave)' }}>
         Auditoria das conferências realizadas no galpão. Clique em um cartão para ver a foto e o comparativo IA × operador.
       </p>
-      <div className="photo-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
+      <div className="photo-grid">
         {(data || []).map((c) => (
           <ConferenceCard key={c.id} conferencia={c} onClick={() => setSelecionada(c)} />
         ))}

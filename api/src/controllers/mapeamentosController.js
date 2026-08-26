@@ -31,15 +31,18 @@ async function buscarPorId(req, res, next) {
 
 async function criar(req, res, next) {
   try {
-    const { nome_anuncio, variacao, sku_id } = req.body;
-    if (!nome_anuncio || !sku_id) {
-      return res.status(400).json({ erro: 'nome_anuncio e sku_id são obrigatórios.' });
+    const { nome_anuncio, variacao, sku_id, sku_erp, itens } = req.body;
+    if (!nome_anuncio && !sku_erp) {
+      return res.status(400).json({ erro: 'nome_anuncio ou sku_erp é obrigatório.' });
     }
-    const novo = await MapeamentoAnuncio.create({ nome_anuncio, variacao, sku_id });
+    if (!sku_id && (!Array.isArray(itens) || itens.length === 0)) {
+      return res.status(400).json({ erro: 'Informe o SKU principal ou a lista de componentes.' });
+    }
+    const novo = await MapeamentoAnuncio.create({ nome_anuncio, variacao, sku_id, sku_erp, itens });
     return res.status(201).json(novo);
   } catch (err) {
     if (err.code === '23505') {
-      return res.status(409).json({ erro: 'Já existe um mapeamento para este anúncio + variação.' });
+      return res.status(409).json({ erro: 'Já existe um mapeamento para este anúncio / SKU ERP.' });
     }
     return next(err);
   }
@@ -47,13 +50,13 @@ async function criar(req, res, next) {
 
 async function atualizar(req, res, next) {
   try {
-    const { nome_anuncio, variacao, sku_id } = req.body;
-    const atualizado = await MapeamentoAnuncio.update(req.params.id, { nome_anuncio, variacao, sku_id });
+    const { nome_anuncio, variacao, sku_id, sku_erp, itens } = req.body;
+    const atualizado = await MapeamentoAnuncio.update(req.params.id, { nome_anuncio, variacao, sku_id, sku_erp, itens });
     if (!atualizado) return res.status(404).json({ erro: 'Mapeamento não encontrado.' });
     return res.json(atualizado);
   } catch (err) {
     if (err.code === '23505') {
-      return res.status(409).json({ erro: 'Já existe um mapeamento para este anúncio + variação.' });
+      return res.status(409).json({ erro: 'Já existe um mapeamento para este anúncio / SKU ERP.' });
     }
     return next(err);
   }

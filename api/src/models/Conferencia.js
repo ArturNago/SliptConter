@@ -22,15 +22,20 @@ async function create(data, client = db) {
     origem = 'manual',
     statusDataset = 'na',
     criadaOffline = false,
+    caixasPorCamada = null,
+    camadasConfirmadas = null,
+    caixasSugeridasIa = null,
+    deteccoesIa = null,
   } = data;
 
   const { rows } = await client.query(
     `INSERT INTO conferencias
-       (sku_id, armazem_id, id_operador, url_imagem_local, quantidade_contada,
-         quantidade_sugerida_ia, quantidade_total, ajuste_manual, origem,
-         status_dataset, criada_offline)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-     RETURNING *`,
+        (sku_id, armazem_id, id_operador, url_imagem_local, quantidade_contada,
+          quantidade_sugerida_ia, quantidade_total, ajuste_manual, origem,
+          status_dataset, criada_offline, caixas_por_camada, camadas_confirmadas,
+          caixas_sugeridas_ia, deteccoes_ia)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      RETURNING *`,
     [
       skuId,
       armazemId,
@@ -43,6 +48,10 @@ async function create(data, client = db) {
       origem,
       statusDataset,
       criadaOffline,
+      caixasPorCamada,
+      camadasConfirmadas,
+      caixasSugeridasIa,
+      deteccoesIa ? JSON.stringify(deteccoesIa) : null,
     ]
   );
   return rows[0];

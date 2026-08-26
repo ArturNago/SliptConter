@@ -30,6 +30,7 @@ export default function LancarContagemScreen({ route, navigation }) {
   const [cameraMode, setCameraMode] = useState('foto');
   const [buscandoSku, setBuscandoSku] = useState(false);
   const [permissao, solicitarPermissao] = useCameraPermissions();
+  const [analisandoIa, setAnalisandoIa] = useState(false);
   const cameraRef = useRef(null);
 
   // Busca server-side com debounce: evita baixar o catálogo inteiro.
@@ -51,6 +52,10 @@ export default function LancarContagemScreen({ route, navigation }) {
   }, [route.params?.produto]);
 
   async function abrirCamera(mode) {
+    if (mode === 'foto' && !produto) {
+      Alert.alert('Selecione um produto', 'Selecione ou bipe um produto antes de fotografar a pilha.');
+      return;
+    }
     if (!permissao?.granted) {
       const resultado = await solicitarPermissao();
       if (!resultado.granted) {
@@ -83,8 +88,39 @@ export default function LancarContagemScreen({ route, navigation }) {
       const foto = await cameraRef.current.takePictureAsync({ quality: 0.75 });
       setImagemUri(foto.uri);
       setCameraAberta(false);
+
+      // V1: chama IA para sugestão de contagem após capturar foto
+      await analisarComIA(foto.uri);
     } catch {
       Alert.alert('Erro na foto', 'Não foi possível capturar a foto.');
+    }
+  }
+
+  async function analisarComIA(uri) {
+    setAnalisandoIa(true);
+    try {
+      const sugestao = await api.solicitarSugestaoIA(uri);
+
+      if (sugestao?.disponivel) {
+        // Navega para tela de revisão com dados da IA
+        navigation.navigate('ContagemIAReview', {
+          imagemUri: uri,
+          caixas: sugestao.caixas || [],
+          caixasPorCamada: sugestao.caixasPorCamada || 0,
+          confianca: sugestao.confianca || 0,
+          skuId: produto?.id,
+          armazemId: armazem.id,
+          produto,
+          volumesPorCamada: produto?.volumesPorCamada,
+          camadasMaximasPalete: produto?.camadasMaximasPalete,
+          tipoMovimentacao: tipo,
+        });
+      }
+      // Se disponivel:false, permanece no fluxo manual (sem erro)
+    } catch {
+      // IA indisponível: segue no fluxo manual silenciosamente
+    } finally {
+      setAnalisandoIa(false);
     }
   }
 
@@ -179,7 +215,15 @@ export default function LancarContagemScreen({ route, navigation }) {
 
         <View style={styles.section}>
           <View style={styles.sectionHeading}><Text style={styles.sectionTitle}>4. Evidência</Text><Text style={styles.optional}>Opcional</Text></View>
-          {imagemUri ? <View style={styles.photoPreview}><Image source={{ uri: imagemUri }} style={styles.photo} /><Pressable onPress={() => setImagemUri(null)}><Text style={styles.removePhoto}>Remover foto</Text></Pressable></View> : <Pressable style={styles.photoButton} onPress={() => abrirCamera('foto')}><Text style={styles.photoIcon}>+</Text><View><Text style={styles.photoTitle}>Adicionar foto</Text><Text style={styles.photoHint}>Ajuda na auditoria do lançamento</Text></View></Pressable>}
+          {analisandoIa ? (
+            <View style={styles.analyzingContainer}>
+              <Text style={styles.analyzingText}>Analisando imagem com IA...</Text>
+            </View>
+          ) : imagemUri ? (
+            <View style={styles.photoPreview}><Image source={{ uri: imagemUri }} style={styles.photo} /><Pressable onPress={() => setImagemUri(null)}><Text style={styles.removePhoto}>Remover foto</Text></Pressable></View>
+          ) : (
+            <Pressable style={styles.photoButton} onPress={() => abrirCamera('foto')}><Text style={styles.photoIcon}>+</Text><View><Text style={styles.photoTitle}>Adicionar foto</Text><Text style={styles.photoHint}>Ajuda na auditoria do lançamento</Text></View></Pressable>
+          )}
         </View>
 
         <View style={styles.summary}><Text style={styles.summaryLabel}>{tipo === 'saida' ? 'Removendo do' : tipo === 'ajuste' ? 'Definindo saldo em' : 'Adicionando ao'} armazém</Text><Text style={styles.summaryValue}>{quantidade} unidade{quantidade === 1 ? '' : 's'}</Text><Text style={styles.summaryWarehouse}>{armazem.nome}</Text></View>
@@ -249,4 +293,11 @@ const styles = StyleSheet.create({
   cameraTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '800', textAlign: 'center' },
   camera: { flex: 1, borderRadius: 18, overflow: 'hidden' },
   cameraActions: { gap: 10 },
+  analyzingContainer: {
+    backgroundColor: '#EFF9F6',
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+  },
+  analyzingText: { color: '#0F766E', fontSize: 14, fontWeight: '700' },
 });

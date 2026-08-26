@@ -38,4 +38,6 @@ api/dataset/
 
 # OS
 .DS_Store
-Thumbs.db
+Thumbs.dbia-worker/runs/
+ia-worker/*.pt
+ia-worker/training/img*

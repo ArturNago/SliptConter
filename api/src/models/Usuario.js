@@ -11,7 +11,7 @@ async function findById(id) {
 
 async function findByUsername(username) {
   const { rows } = await db.query(
-    'SELECT * FROM usuarios WHERE username = $1 AND ativo = TRUE',
+    'SELECT * FROM usuarios WHERE LOWER(username) = LOWER($1) AND ativo = TRUE',
     [username]
   );
   return rows[0] || null;

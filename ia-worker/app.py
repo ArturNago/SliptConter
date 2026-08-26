@@ -3,7 +3,8 @@ API HTTP do worker de IA (V1), consumida pelo `iaClient.js` da API Node.
 
 Endpoints:
     GET  /health   -> health check simples
-    POST /predict   -> recebe a foto da pilha, retorna a sugestão de camadas
+    POST /predict   -> recebe a foto da pilha, retorna caixas detectadas
+                       da camada frontal + caixas_por_camada + confianca
 """
 import shutil
 import tempfile
@@ -13,7 +14,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 import config
-from inference.predict import modelo_disponivel, predict_camadas
+from inference.predict import modelo_disponivel, predict_caixas
 
 app = FastAPI(title="Tebarrot IA Worker", version="1.0.0")
 
@@ -37,7 +38,7 @@ async def predict(imagem: UploadFile = File(...)):
         tmp_path = tmp.name
 
     try:
-        resultado = predict_camadas(tmp_path)
+        resultado = predict_caixas(tmp_path)
     finally:
         Path(tmp_path).unlink(missing_ok=True)
 

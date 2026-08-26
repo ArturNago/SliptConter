@@ -211,6 +211,10 @@ async function listarMovimentacoesProduto(produtoId, { limit = 20 } = {}) {
  * @param {'manual'|'ia'} [params.origem]
  * @param {boolean} [params.criadaOffline]
  * @param {'entrada'|'saida'|'ajuste'} [params.tipoMovimentacao]
+ * @param {number} [params.caixasPorCamada] caixas detectadas na camada frontal (V1)
+ * @param {number} [params.camadasConfirmadas] camadas confirmadas pelo operador (V1)
+ * @param {number} [params.caixasSugeridasIa] caixas sugeridas pela IA (V1)
+ * @param {Array} [params.deteccoesIa] bounding boxes normalizadas da IA (V1)
  */
 async function criarConferencia(params) {
   const skuId = params.skuId || params.produtoId;
@@ -237,6 +241,18 @@ async function criarConferencia(params) {
   form.append('quantidadeContada', String(params.quantidadeContada));
   if (params.quantidadeSugeridaIa !== undefined && params.quantidadeSugeridaIa !== null) {
     form.append('quantidadeSugeridaIa', String(params.quantidadeSugeridaIa));
+  }
+  if (params.caixasPorCamada !== undefined && params.caixasPorCamada !== null) {
+    form.append('caixasPorCamada', String(params.caixasPorCamada));
+  }
+  if (params.camadasConfirmadas !== undefined && params.camadasConfirmadas !== null) {
+    form.append('camadasConfirmadas', String(params.camadasConfirmadas));
+  }
+  if (params.caixasSugeridasIa !== undefined && params.caixasSugeridasIa !== null) {
+    form.append('caixasSugeridasIa', String(params.caixasSugeridasIa));
+  }
+  if (params.deteccoesIa) {
+    form.append('deteccoesIa', JSON.stringify(params.deteccoesIa));
   }
   form.append('ajusteManual', String(params.ajusteManual || 0));
   form.append('origem', params.origem || 'manual');
@@ -303,11 +319,34 @@ async function importarVendas(arquivoUri, nomeArquivo, armazemIds) {
     name: nomeArquivo,
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
-  form.append('armazemIds', JSON.stringify(armazemIds));
+  if (Array.isArray(armazemIds) && armazemIds.length > 0) {
+    form.append('armazemId', armazemIds[0]);
+    form.append('armazemIds', JSON.stringify(armazemIds));
+  }
   const { data } = await http.post('/movimentacoes/importar-vendas', form, {
     headers: { 'Content-Type': 'multipart/form-data' },
     timeout: 60000,
   });
+  return data;
+}
+
+async function listarInventarios(filtros = {}) {
+  const { data } = await http.get('/inventarios', { params: filtros });
+  return data;
+}
+
+async function buscarInventario(id, contagemCega = true) {
+  const { data } = await http.get(`/inventarios/${id}`, { params: { contagemCega } });
+  return data;
+}
+
+async function registrarContagemInventario(ordemId, skuId, quantidadeContada) {
+  const { data } = await http.post(`/inventarios/${ordemId}/contagem`, { skuId, quantidadeContada });
+  return data;
+}
+
+async function obterIndicadoresPCP(dias = 30) {
+  const { data } = await http.get('/pcp/indicadores', { params: { dias } });
   return data;
 }
 
@@ -338,4 +377,8 @@ export default {
   atualizarMapeamento,
   removerMapeamento,
   importarVendas,
+  listarInventarios,
+  buscarInventario,
+  registrarContagemInventario,
+  obterIndicadoresPCP,
 };

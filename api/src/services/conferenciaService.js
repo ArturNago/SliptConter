@@ -26,6 +26,10 @@ const ledgerService = require('./ledgerService');
  * @param {'manual'|'ia'} [params.origem]
  * @param {boolean} [params.criadaOffline] true quando sincronizado depois da fila do celular
  * @param {string} [params.tipoMovimentacao] 'entrada' | 'saida' | 'ajuste' (default 'entrada')
+ * @param {number} [params.caixasPorCamada] caixas detectadas na camada frontal (V1)
+ * @param {number} [params.camadasConfirmadas] camadas confirmadas pelo operador (V1)
+ * @param {number} [params.caixasSugeridasIa] caixas sugeridas pela IA (V1)
+ * @param {Array} [params.deteccoesIa] bounding boxes normalizadas da IA (V1)
  */
 async function registrarConferencia(params) {
   const {
@@ -38,6 +42,10 @@ async function registrarConferencia(params) {
     origem = 'manual',
     criadaOffline = false,
     tipoMovimentacao = 'entrada',
+    caixasPorCamada = null,
+    camadasConfirmadas = null,
+    caixasSugeridasIa = null,
+    deteccoesIa = null,
   } = params;
 
   // O controller já resolve skuId (aceitando o legado "produtoId" como alias).
@@ -95,6 +103,10 @@ async function registrarConferencia(params) {
         // o worker de treino promove para "treinado" após o fine-tuning.
         statusDataset: 'pendente_treinamento',
         criadaOffline,
+        caixasPorCamada,
+        camadasConfirmadas,
+        caixasSugeridasIa,
+        deteccoesIa,
       },
       client
     );
