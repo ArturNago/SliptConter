@@ -45,7 +45,7 @@ async function gerarDashboardEstoquePdf(req, res, next) {
 
       if (item.total <= 0 && item.vendas_historico > 0) {
         itemData.status = item.vendas_historico > 5 ? 'RUPTURA IMEDIATA' : 'ESTOQUE ZERADO';
-        itemData.motivo = \`Sem saldo físico. Histórico de saída: \${item.vendas_historico} un.\`;
+        itemData.motivo = `Sem saldo físico. Histórico de saída: ${item.vendas_historico} un.`;
         itemsRuptura.push(itemData);
       } else if (item.total > 0 && item.total <= 3) {
         itemData.status = 'CRÍTICO (1-3 un)';
