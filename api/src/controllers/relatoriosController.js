@@ -1,8 +1,8 @@
 const db = require('../config/db');
-const puppeteer = require('puppeteer');
 
 async function gerarDashboardEstoquePdf(req, res, next) {
   try {
+    const puppeteer = (await import('puppeteer')).default;
     // 1. Get stock by SKU and Armazem, and Historical Sales/Exits
     const stockRes = await db.query(`
       SELECT 
