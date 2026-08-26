@@ -9,6 +9,7 @@ const mapeamentosRoutes = require('./mapeamentosRoutes');
 const adminRoutes = require('./adminRoutes');
 const inventariosRoutes = require('./inventariosRoutes');
 const pcpRoutes = require('./pcpRoutes');
+const relatoriosRoutes = require('./relatoriosRoutes');
 
 const router = express.Router();
 
@@ -32,5 +33,6 @@ router.use('/mapeamentos', mapeamentosRoutes);
 router.use('/inventarios', inventariosRoutes);
 router.use('/pcp', pcpRoutes);
 router.use('/admin', adminRoutes);
+router.use('/relatorios', relatoriosRoutes);
 
 module.exports = router;

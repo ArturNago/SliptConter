@@ -4,7 +4,7 @@ import { KpiCard } from '../components/dashboard/KpiCard';
 import { StockLineChart, DistributionDoughnut } from '../components/dashboard/StockChart';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { Card, Spinner, Badge, Button } from '../components/common';
-import { Boxes, DollarSign, Camera, Warehouse, AlertTriangle, RefreshCw, TrendingUp, TrendingDown, Activity, Award, BarChart3 } from 'lucide-react';
+import { Boxes, DollarSign, Camera, Warehouse, AlertTriangle, RefreshCw, TrendingUp, TrendingDown, Activity, Award, BarChart3, Download } from 'lucide-react';
 import { formatarNumero, formatarMoeda } from '../utils/formatters';
 
 function ErrorState({ erro, onRetry }) {
@@ -55,9 +55,35 @@ function CrescimentoTag({ valor }) {
   return <span style={{ color: 'var(--texto-suave)', fontSize: 12 }}>0%</span>;
 }
 
+import api from '../services/api';
+
 export default function DashboardPage() {
   const { data, loading, error, recarregar } = useDashboardMetrics();
   const [retrying, setRetrying] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownloadReport = async () => {
+    setDownloading(true);
+    try {
+      const response = await api.get('/relatorios/dashboard-estoque', {
+        responseType: 'blob'
+      });
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Dashboard_Executivo_Estoque.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao gerar relatório. Tente novamente.');
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const handleRetry = async () => {
     setRetrying(true);
@@ -104,9 +130,15 @@ export default function DashboardPage() {
             Métricas consolidadas dos armazéns e movimentações recentes.
           </p>
         </div>
-        <Button variant="ghost" onClick={handleRetry} disabled={retrying}>
-          <RefreshCw size={16} style={{ animation: retrying ? 'spin 1s linear infinite' : 'none' }} /> Atualizar
-        </Button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Button variant="outline" onClick={handleDownloadReport} disabled={downloading}>
+            {downloading ? <Spinner size={16} /> : <Download size={16} />} 
+            {downloading ? 'Gerando PDF...' : 'Gerar Relatório'}
+          </Button>
+          <Button variant="ghost" onClick={handleRetry} disabled={retrying}>
+            <RefreshCw size={16} style={{ animation: retrying ? 'spin 1s linear infinite' : 'none' }} /> Atualizar
+          </Button>
+        </div>
       </div>
 
       {/* Métricas fixas - sempre visíveis */}
