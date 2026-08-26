@@ -1,9 +1,0 @@
-Conjunto de teste FIXO usado por validate_model.py para comparar o modelo
-candidato com o modelo em produção. Estrutura esperada:
-
-  images/*.jpg
-  labels/*.txt   (formato YOLO, mesma convenção usada em build_dataset.py)
-  data.yaml      (train/val/test apontando para este mesmo conjunto)
-
-Mantenha este conjunto estável entre ciclos de treino para que a
-comparação de métricas (mAP) entre versões do modelo seja significativa.

@@ -1,0 +1,340 @@
+{
+  "mapped": [
+    {
+      "originalName": "Bibox matrix 3 em 1 Branco",
+      "matchedDesc": "BIBOX MATRIX 3 EM 1 BRANCO",
+      "sku_id": "94cb26f6-bcaa-4e64-bd79-3a3077b1701d",
+      "qty": 20
+    },
+    {
+      "originalName": "Bobos matrix 3 em 1 nature",
+      "matchedDesc": "BIBOX MATRIX 3 EM 1 NATURE",
+      "sku_id": "8d1e0805-7ee6-42aa-8368-633e007e34d7",
+      "qty": 19
+    },
+    {
+      "originalName": "Buffet ares lux 3 portas Branco",
+      "matchedDesc": "BUFFET ARES LUX 3 PORTAS BRANCO",
+      "sku_id": "8abab578-08df-4fce-9e7e-11e469ebc3a1",
+      "qty": 3
+    },
+    {
+      "originalName": "Buffet ares lux 3 portas Nature",
+      "matchedDesc": "BUFFET ARES LUX 3 PORTAS NATURE",
+      "sku_id": "0440c27e-3bf8-4eed-81fc-c1571c57575f",
+      "qty": 7
+    },
+    {
+      "originalName": "Buffet ares lux 4 portas",
+      "matchedDesc": "BUFFET ARES LUX 4 PORTAS BRANCO",
+      "sku_id": "b873269e-885c-493a-9c2e-e3df860e89a4",
+      "qty": 4
+    },
+    {
+      "originalName": "Buffet ares lux 4 portas Nature",
+      "matchedDesc": "BUFFET ARES LUX 4 PORTAS NATURE",
+      "sku_id": "4365cc82-4d51-4ffc-a779-c62e8e407e4b",
+      "qty": 2
+    },
+    {
+      "originalName": "Cadeira allegra 337",
+      "matchedDesc": "CJ ASSENTO/ENCOSTO CADEIRA ALLEGRA 337/530",
+      "sku_id": "a4653a00-b9e6-44d0-8a7e-76eeabd8ba0a",
+      "qty": 9
+    },
+    {
+      "originalName": "Havana cabeceira 1,40 Branco",
+      "matchedDesc": "CABECEIRA CASAL HAVANA 1,40 BRANCO",
+      "sku_id": "3dcd4082-2d57-45a0-8a8e-6e55a521aeac",
+      "qty": 24
+    },
+    {
+      "originalName": "Namoradeira mona new 104",
+      "matchedDesc": "NAMORADEIRA MONA NEW 104 LINHAO CINZA COM MARROM",
+      "sku_id": "f6dcee92-50e3-47d1-b3a2-ed476654a21e",
+      "qty": 10
+    },
+    {
+      "originalName": "Namoradeira mona new 128",
+      "matchedDesc": "NAMORADEIRA MONA NEW 128 RUSTICO VERDE SAGE",
+      "sku_id": "6c7b8bfe-3ccc-4667-b166-5aa886f8e66e",
+      "qty": 5
+    },
+    {
+      "originalName": "Namoradeira mona new 336",
+      "matchedDesc": "NAMORADEIRA MONA NEW 336 LINHO TERRACOTA",
+      "sku_id": "9433fa49-6947-4f7c-aa4f-104450c63760",
+      "qty": 11
+    },
+    {
+      "originalName": "Namoradeira mona new 337",
+      "matchedDesc": "NAMORADEIRA MONA NEW 337 LINHO CINZA",
+      "sku_id": "dba61f05-257d-4d97-ab93-27689581ad90",
+      "qty": 2
+    },
+    {
+      "originalName": "Namoradeira Mona new bege ",
+      "matchedDesc": "NAMORADEIRA MONA NEW LINHO BEGE CLARO",
+      "sku_id": "d340c0e4-3250-4ee6-942c-5a885e79242a",
+      "qty": 7
+    },
+    {
+      "originalName": "Poltrona air 521",
+      "matchedDesc": "POLTRONA AIR 521 NOBUCK MARROM",
+      "sku_id": "b197b2fb-69c7-4e25-80e6-39ba9b73445f",
+      "qty": 7
+    },
+    {
+      "originalName": "Poltrona air new 305",
+      "matchedDesc": "POLTRONA AIR  NEW 305 LINHO CRU",
+      "sku_id": "0bba6cc8-0c17-44ac-81c0-4f7d4242a073",
+      "qty": 10
+    },
+    {
+      "originalName": "Poltrona air new 336",
+      "matchedDesc": "POLTRONA AIR  NEW 336 LINHO TERRACOTA",
+      "sku_id": "83516922-7e83-43a0-b6e5-2271037993c6",
+      "qty": 3
+    },
+    {
+      "originalName": "Poltrona air new 337 ",
+      "matchedDesc": "POLTRONA AIR  NEW 337 LINHO CINZA",
+      "sku_id": "ad62d234-daf7-4cad-96c9-6fcb7eb2fb3a",
+      "qty": 1
+    },
+    {
+      "originalName": "Poltrona caraiva 128",
+      "matchedDesc": "POLTRONA CARAIVA 128 RUSTICO VERDE SAGE",
+      "sku_id": "0fe4dc1c-1bb9-4d90-a27f-63a90f7adab5",
+      "qty": 8
+    },
+    {
+      "originalName": "Poltrona caraiva 227",
+      "matchedDesc": "POLTRONA CARAIVA 226 LINHO AREIA",
+      "sku_id": "c147b5db-c5c2-4561-928d-b1e7e0ea4163",
+      "qty": 117
+    },
+    {
+      "originalName": "Poltrona uxuá 227",
+      "matchedDesc": "POLTRONA CARAIVA 227 LINHO AREIA ESCURO",
+      "sku_id": "e6889683-3bdf-41e2-bb84-034f9c8eb792",
+      "qty": 1
+    },
+    {
+      "originalName": "Poltrona caraiva 235",
+      "matchedDesc": "POLTRONA CARAIVA 235 VELUDO PRETO ABSOLUTO",
+      "sku_id": "1b93c8d6-8353-492d-985f-216cb2dcc61c",
+      "qty": 7
+    },
+    {
+      "originalName": "Poltrona caraiva 237",
+      "matchedDesc": "POLTRONA CARAIVA 237 VELUDO VERDE MUSGO",
+      "sku_id": "23683e62-1cd6-4a82-b0ad-35db2df05a76",
+      "qty": 1
+    },
+    {
+      "originalName": "Poltrona caraiva 246",
+      "matchedDesc": "POLTRONA CARAIVA 246 CINZA",
+      "sku_id": "9b656985-3607-4010-86d4-f1cc08e4dac1",
+      "qty": 2
+    },
+    {
+      "originalName": "Poltrona caraiva 336",
+      "matchedDesc": "POLTRONA CARAIVA 336 LINHO TERRACOTA",
+      "sku_id": "9a8c5abd-334a-404b-a70f-bb8bee0f96e7",
+      "qty": 98
+    },
+    {
+      "originalName": "Poltrona caraiva 337",
+      "matchedDesc": "POLTRONA CARAIVA 337 LINHO CINZA",
+      "sku_id": "4a603939-b29a-4dc4-b84b-a6e2408419c8",
+      "qty": 68
+    },
+    {
+      "originalName": "Poltrona caraiva 518",
+      "matchedDesc": "POLTRONA CARAIVA 518 LINHO AZUL MARINHO",
+      "sku_id": "9d96968d-10cb-4bda-aa36-f59fdd3bc228",
+      "qty": 6
+    }
+  ],
+  "unmapped": [
+    {
+      "originalName": "Buffet Atlanta III offwhite/nature",
+      "name": "buffet atlanta iii offwhite/nature",
+      "qty": 14,
+      "candidates": []
+    },
+    {
+      "originalName": "Buffet adega Malorca offwhite/nature",
+      "name": "buffet adega malorca offwhite/nature",
+      "qty": 17,
+      "candidates": []
+    },
+    {
+      "originalName": "Buffet ares lux 3 portas Branco/Nature",
+      "name": "buffet ares lux 3 portas branco/nature",
+      "qty": 1,
+      "candidates": []
+    },
+    {
+      "originalName": "Cadeira Málaga 2Un 336",
+      "name": "cadeira malaga 2un 336",
+      "qty": 3,
+      "candidates": []
+    },
+    {
+      "originalName": "Cadeira Málaga 2Un 337",
+      "name": "cadeira malaga 2un 337",
+      "qty": 4,
+      "candidates": []
+    },
+    {
+      "originalName": "Cadeira malaga 336 2Un ",
+      "name": "cadeira malaga 2un 226",
+      "qty": 3,
+      "candidates": []
+    },
+    {
+      "originalName": "Cadeira malaga 336 2Un ",
+      "name": "cadeira malaga 336 2un",
+      "qty": 4,
+      "candidates": []
+    },
+    {
+      "originalName": "Cadeira malaga 336 2Un ",
+      "name": "cadeira malaga 336 2un",
+      "qty": 6,
+      "candidates": []
+    },
+    {
+      "originalName": "Cadeira paris 2un 227",
+      "name": "cadeira paris 2un 227",
+      "qty": 4,
+      "candidates": []
+    },
+    {
+      "originalName": "Havana cabeceira 1,40 Nature",
+      "name": "havana cabeceira 1,40 nature",
+      "qty": 12,
+      "candidates": [
+        "CABECEIRA CASAL HAVANA 1,40 NATURE",
+        "CABECEIRA CASAL HAVANA 1,40 OFF WHITE/NATURE"
+      ]
+    },
+    {
+      "originalName": "Havana cabeceira 1,40 offwhite/nature",
+      "name": "havana cabeceira 1,40 offwhite/nature",
+      "qty": 13,
+      "candidates": []
+    },
+    {
+      "originalName": "Namoradeira mona new 108",
+      "name": "namoradeira mona new 108",
+      "qty": 1,
+      "candidates": []
+    },
+    {
+      "originalName": "Poltrona air 128",
+      "name": "poltrona air 128",
+      "qty": 4,
+      "candidates": [
+        "POLTRONA AIR  NEW 128 RUSTICO VERDE SAGE",
+        "POLTRONA AIR 128 RUSTICO VERDE SAGE"
+      ]
+    },
+    {
+      "originalName": "Poltrona air 226",
+      "name": "poltrona air 226",
+      "qty": 16,
+      "candidates": [
+        "POLTRONA AIR  NEW 226 LINHO AREIA",
+        "POLTRONA AIR 226 LINHO AREIA"
+      ]
+    },
+    {
+      "originalName": "Poltrona air 305",
+      "name": "poltrona air 305",
+      "qty": 13,
+      "candidates": [
+        "POLTRONA AIR  NEW 305 LINHO CRU",
+        "POLTRONA AIR 305 LINHO CRU"
+      ]
+    },
+    {
+      "originalName": "Poltrona air 336",
+      "name": "poltrona air 336",
+      "qty": 6,
+      "candidates": [
+        "POLTRONA AIR  NEW 336 LINHO TERRACOTA",
+        "POLTRONA AIR 336 LINHO TERRACOTA"
+      ]
+    },
+    {
+      "originalName": "Poltrona air 337",
+      "name": "poltrona air 337",
+      "qty": 23,
+      "candidates": [
+        "POLTRONA AIR  NEW 337 LINHO CINZA",
+        "POLTRONA AIR 337 LINHO CINZA"
+      ]
+    },
+    {
+      "originalName": "Poltrona air 227",
+      "name": "poltrona air 227",
+      "qty": 9,
+      "candidates": [
+        "POLTRONA AIR  NEW 227 LINHO AREIA ESCURA",
+        "POLTRONA AIR 227 LINHO AREIA ESCURA"
+      ]
+    },
+    {
+      "originalName": "Poltrona gabi",
+      "name": "poltrona gabi",
+      "qty": 61,
+      "candidates": [
+        "POLTRONA GABI CINZA",
+        "POLTRONA GABI MARROM"
+      ]
+    },
+    {
+      "originalName": "Poltrona mona 128",
+      "name": "poltrona mona 128",
+      "qty": 4,
+      "candidates": [
+        "POLTRONA MONA 128 RUSTICO VERGE SAGE",
+        "POLTRONA MONA NEW (KIT 2 UN.) 128 RUSTICO VERDE SAGE",
+        "POLTRONA MONA NEW 128 RUSTICO VERGE SAGE"
+      ]
+    },
+    {
+      "originalName": "Poltrona mona 2Un 337",
+      "name": "poltrona mona 2un 337",
+      "qty": 4,
+      "candidates": []
+    },
+    {
+      "originalName": "Poltrona mona 2Un linho bege",
+      "name": "poltrona mona 2un linho bege",
+      "qty": 9,
+      "candidates": []
+    },
+    {
+      "originalName": "Poltrona mona bege",
+      "name": "poltrona mona bege",
+      "qty": 2,
+      "candidates": [
+        "POLTRONA MONA (KIT 2 UN.) LINHO BEGE CLARO",
+        "POLTRONA MONA LINHO BEGE CLARO",
+        "POLTRONA MONA NEW (KIT 2 UN.) 332 LINHO BEGE COM BRANCO",
+        "POLTRONA MONA NEW (KIT 2 UN.) LINHO BEGE CLARO",
+        "POLTRONA MONA NEW LINHO BEGE CLARO"
+      ]
+    },
+    {
+      "originalName": "Poltrona uxuá 305 c/Couro",
+      "name": "poltrona uxua 305 c/couro",
+      "qty": 2,
+      "candidates": []
+    }
+  ]
+}

@@ -1,31 +1,6 @@
 # ============================================================
 # Tebarrot - Conferência de Estoque
 # Infraestrutura 100% local (galpão) + acesso remoto via Cloudflare Tunnel.
-#
-# Serviços:
-#   - db          : PostgreSQL (fonte única da verdade)
-#   - api         : Node.js/Express (regras de negócio, auth, sync Sheets)
-#   - ia-worker   : Python/YOLOv8 (V1 - inferência e treino). Desligado por
-#                   padrão no V0 (profile "v1").
-#
-# Túnel de acesso remoto (cloudflared)
-# -------------------------------------
-# Neste ambiente, o `cloudflared` roda como Serviço nativo do Windows
-# (instalado via `cloudflared.exe service install <token>`), não como
-# container Docker. Por isso NÃO há serviço `cloudflared` neste compose.
-#
-# Consequência importante: como o cloudflared roda fora da rede Docker
-# `tebarrot-net`, o campo "Service" do Public Hostname no dashboard da
-# Cloudflare deve apontar para a porta publicada no HOST, não para o nome
-# do serviço Docker:
-#
-#     Service = http://localhost:3000   (correto — porta publicada pelo `api`)
-#     Service = http://api:3000          (ERRADO neste setup — só resolveria
-#                                          de dentro da rede tebarrot-net)
-#
-# Se um dia o cloudflared voltar a rodar em container (join na rede
-# tebarrot-net), a URL correta passaria a ser http://api:3000 e a porta
-# 3000 do host não precisaria mais estar publicada.
 # ============================================================
 
 services:
@@ -39,14 +14,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db-data:/var/lib/postgresql/data
-      - ./api/migrations:/migrations:ro
+      - ./apps/api/migrations:/migrations:ro
     ports:
-      # Lado esquerdo = porta no HOST (só usada para acessar o Postgres
-      # diretamente da máquina, ex.: psql/DBeaver). Lado direito = porta
-      # DENTRO do container, sempre 5432 — é essa que o container `api`
-      # usa internamente via rede Docker (POSTGRES_HOST=db), então mudar
-      # o lado esquerdo nunca afeta a conexão api -> db.
-      - "${POSTGRES_HOST_PORT:-5433}:5432"
+      # Exposto apenas para localhost para debug local. Nenhuma porta exposta para a rede local externa!
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -57,7 +28,7 @@ services:
 
   api:
     build:
-      context: ./api
+      context: ./apps/api
       dockerfile: Dockerfile
     container_name: tebarrot-api
     restart: unless-stopped
@@ -87,18 +58,16 @@ services:
       CLOUDFLARE_ACCESS_AUD: ${CLOUDFLARE_ACCESS_AUD}
     volumes:
       - dataset:/dataset
-    ports:
-      - "3000:3000"
     networks:
       - tebarrot-net
 
   ia-worker:
     build:
-      context: ./ia-worker
+      context: ./apps/ia-worker
       dockerfile: Dockerfile
     container_name: tebarrot-ia-worker
     restart: unless-stopped
-    profiles: ["v1"] # só sobe quando explicitamente habilitado (V1)
+    profiles: ["v1"]
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -110,22 +79,12 @@ services:
       IA_MIN_IMPROVEMENT: ${IA_MIN_IMPROVEMENT:-0.0}
     volumes:
       - dataset:/dataset
-    ports:
-      - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       - tebarrot-net
 
-  # ----------------------------------------------------------
-  # Painel Web de Administração (SliptConter Web Admin)
-  # React + Vite servido via Nginx. Expõe na porta 8080 do host
-  # para não conflitar com a API (3000).
-  # ----------------------------------------------------------
   admin-web:
     build:
-      context: ./admin-web
+      context: ./apps/admin-web
       dockerfile: Dockerfile
       args:
         - VITE_API_URL=${EXPO_PUBLIC_API_URL:-https://estoque.puratienda.store}
@@ -133,10 +92,38 @@ services:
     restart: unless-stopped
     environment:
       - VITE_API_URL=${EXPO_PUBLIC_API_URL:-https://estoque.puratienda.store}
-    ports:
-      - "${ADMIN_WEB_PORT:-8081}:80"
+    networks:
+      - tebarrot-net
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: tebarrot-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - tebarrot-net
+
+  db-backup:
+    image: postgres:16-alpine
+    container_name: tebarrot-db-backup
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: db
+    volumes:
+      - ./backups:/backups
+    entrypoint: |
+      /bin/sh -c "
+        echo '0 3 * * 0 pg_dump -h db -U ${POSTGRES_USER} -d ${POSTGRES_DB} -F c -f /backups/backup_$(date +\%Y\%m\%d).dump' > /etc/crontabs/root
+        crond -f -d 8
+      "
     depends_on:
-      - api
+      db:
+        condition: service_healthy
     networks:
       - tebarrot-net
 
