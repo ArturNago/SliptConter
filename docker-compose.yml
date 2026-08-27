@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
       - ./apps/api/migrations:/migrations:ro
     ports:
       # Exposto apenas para localhost para debug local. Nenhuma porta exposta para a rede local externa!
@@ -132,5 +132,4 @@ networks:
     driver: bridge
 
 volumes:
-  db-data:
   dataset:
